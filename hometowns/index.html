@@ -241,7 +241,7 @@ button{font:inherit;color:inherit}
 .tiles div{background:var(--panel-2);border-radius:8px;padding:7px 6px;text-align:center}
 .tiles b{display:block;font:600 19px/1.05 "Barlow Condensed","Arial Narrow",sans-serif}
 .tiles span{font-size:10.5px;color:var(--ink-3);letter-spacing:.06em}
-.stbl{overflow:auto;max-height:420px;border:1px solid var(--line);border-radius:8px}
+.stbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
 .stbl table{border-collapse:collapse;width:100%;font-size:12px;font-variant-numeric:tabular-nums}
 .stbl th{position:sticky;top:0;background:var(--panel-2);font-weight:600;color:var(--ink-2);text-align:left;padding:5px 6px;white-space:nowrap}
 .stbl td{padding:4px 6px;border-top:1px solid var(--line);white-space:nowrap;color:var(--ink-2)}
@@ -1905,6 +1905,7 @@ function pcStats(id) {
     hdr = isG ? ['Season', 'Team', 'GP', 'W', 'L', 'GAA', 'SV%', 'SO'] : ['Season', 'Team', 'GP', 'G', 'A', 'P', 'PIM'];
     rows = hs.map(r => { const [y, teams, gp, ...v] = r; return { nhl: true, cells: [`${y}–${String(y + 1).slice(2)}`, teams.replace(/,/g, ', '), gp, ...(isG ? [v[0], v[1], v[2] == null ? '—' : v[2].toFixed(2), v[3] == null ? '—' : v[3].toFixed(3).replace(/^0/, ''), v[4]] : v)] }; });
   }
+  if (rows) rows.reverse();   // most recent season first
   if (rows && rows.length) out += `<div class="grp"><h3>Season by season${c ? ', all leagues' : ', NHL'}</h3><div class="stbl"><table><thead><tr>${hdr.map((x, i) => `<th class="${i > (c ? 2 : 1) ? 'n' : ''}">${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr class="${r.nhl && c ? 'nhl' : ''}">${r.cells.map((x, i) => `<td class="${i > (c ? 2 : 1) ? 'n' : ''}">${esc(x ?? '—')}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
   return out + `<div class="note">Regular season only. Source: NHL.com.</div>`;
 }
