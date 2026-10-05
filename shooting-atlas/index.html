@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<!-- This site is hosted on Netlify. Anyone can build and deploy a site
-     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=0e6ec8f5-0cd8-40ff-9a0b-10f1721fbdc5
-     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Best shooter at every spot — NHL offensive zone, 2018-19 → 2025-26</title>
+<title>Best shooter at every spot — NHL offensive zone</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2028%2032%22%3E%3Cpath%20d%3D%22M2%2012h3M23%2012h3M2%2022h3.6M22.4%2022h3.6%22%20stroke%3D%22%231b2a35%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20fill-rule%3D%22evenodd%22%20fill%3D%22%23f4f1ea%22%20stroke%3D%22%231b2a35%22%20stroke-width%3D%221.2%22%20d%3D%22M14%201.5C8.2%201.5%205%206.6%205%2014c0%208.6%203.9%2016.5%209%2016.5s9-7.9%209-16.5c0-7.4-3.2-12.5-9-12.5ZM8.4%2013.2c1.4-1.3%203.4-1.4%204.4-.2-.6%201.7-2.8%202.4-4.4.2Zm11.2%200c-1.4-1.3-3.4-1.4-4.4-.2.6%201.7%202.8%202.4%204.4.2ZM10.9%205.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8Zm3.1-.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8Zm3.1.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8ZM12.4%2017.6h3.2v1.2h-3.2ZM11.4%2021.4h1.2v4.2h-1.2Zm2%200h1.2v4.6h-1.2Zm2%200h1.2v4.2h-1.2Z%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
@@ -647,7 +645,7 @@
       </button>
     </div>
     <p class="subtitle">
-      Shot rate, finishing efficiency, and per-season player profiles, 2018-19 → 2025-26.
+      Shot rate, finishing efficiency, and per-season player profiles, <span class="js-range">2018-19 → 2025-26</span>.
       <span class="hint">Click a hex to lock that player — then drag around to see their stats from anywhere they've shot, and watch the career-timeline panel on the right.</span>
     </p>
   </header>
@@ -733,7 +731,8 @@
 
     <div class="map-attr">
       Data: <a href="https://moneypuck.com" target="_blank" rel="noopener">MoneyPuck.com</a>
-      &nbsp;·&nbsp; shots_2018-2024.csv + shots_2025.csv (2018-19 → 2025-26)
+      &nbsp;·&nbsp; <span class="js-range">2018-19 → 2025-26</span>
+      &nbsp;·&nbsp; refreshed weekly · data through <span class="js-through">—</span>
     </div>
 
     <div class="stats-line" id="stats-line"></div>
@@ -747,7 +746,7 @@
   <footer>
     <p class="credit">Map design: Ridgeline Maps, Edwards, Colorado.</p>
     <p>
-      <strong>Data.</strong> All <strong id="data-shot-count">888,502</strong> offensive-zone shots across <strong>8 NHL seasons (2018-19 → 2025-26)</strong> — <a href="https://moneypuck.com" target="_blank" rel="noopener">MoneyPuck.com</a> <code>shots_2018-2024.csv</code> + <code>shots_2025.csv</code>, all situations including PP / PK / empty net. Player bio data from <code>allPlayersLookup.csv</code>.
+      <strong>Data.</strong> All <strong id="data-shot-count">888,502</strong> offensive-zone shots across <strong><span class="js-nseasons">8</span> NHL seasons (<span class="js-range">2018-19 → 2025-26</span>)</strong> — <a href="https://moneypuck.com" target="_blank" rel="noopener">MoneyPuck.com</a> <code>shots_2018-2024.csv</code> + <code>shots_2025.csv</code>, all situations including PP / PK / empty net. Player bio data from <code>allPlayersLookup.csv</code>.
       The rink is binned into pointy-top hexagons with a 4-foot edge (~41.6 sq&nbsp;ft each).
       For each hex, the "best shooter" is the player with the highest empirical-Bayes-adjusted Sh%:
       <code>(g + k · lg_sh) / (s + k)</code>, prior <code>k = 30</code>, prior mean = the hex's own league rate.
@@ -778,14 +777,27 @@
 <script src="data-players-1.js"></script>
 <script src="data-players-2.js"></script>
 <script src="data-players-3.js"></script>
+<script src="data-players-current.js"></script>
 <script>
 /* =====================================================================
- * Embedded hex aggregate data (2025-26 season, all shots, 4-ft hexes,
+ * Hex aggregate data (loaded from data-*.js; all seasons, 4-ft hexes,
  * progressive shot threshold 8→1 with g≥1 required, EB shrinkage k=30).
  * Also includes per-player per-hex (shots, goals) for every player who
  * owns at least one hex, used for click-locked mode.
  * ===================================================================== */
-const HEX_DATA = Object.assign({}, window.HD_META, { players: Object.assign({}, ...window.HD_P) });
+// Data files are written weekly by _pipeline/update_atlas.py (GitHub Actions).
+// data-players-1..3.js hold completed seasons (static); data-players-current.js holds
+// names/teams/bios/totals + the current season. Merge them per player, combining hs.
+const HEX_DATA = (function () {
+  const players = {};
+  for (const chunk of (window.HD_P || [])) {
+    for (const id in chunk) {
+      const p = chunk[id], prev = players[id];
+      players[id] = prev ? Object.assign({}, prev, p, { hs: Object.assign({}, prev.hs, p.hs) }) : p;
+    }
+  }
+  return Object.assign({}, window.HD_META, { players });
+})();
 
 /* =====================================================================
  * NHL team logos removed for the public web version (team-color chips are shown instead). Originally bundled from
@@ -862,6 +874,7 @@ let currentSituation = "all";
 // current campaign; users can drop to "all" via the dropdown.
 let currentSeason = (function () {
   const seasons = (HEX_DATA.seasons || []).slice().sort();
+  if (HEX_DATA.defaultSeason && seasons.includes(HEX_DATA.defaultSeason)) return HEX_DATA.defaultSeason;
   return seasons.length ? seasons[seasons.length - 1] : "all";
 })();
 
@@ -1968,12 +1981,30 @@ function setStatsLine() {
     `<strong>${totalHex}</strong> hexes ` +
     `(<strong>${filled}</strong> with an all-time top shooter, ` +
     `<strong>${totalHex - filled}</strong> never scored from) · ` +
-    `<strong>${nSeasons}</strong> seasons (2018-19 → 2025-26)`;
+    `<strong>${nSeasons}</strong> seasons (${seasonRangeLabel()})`;
 
   // Keep the footer's total-shots number in sync with the loaded dataset
   // so it never drifts from what's actually rendered.
   const footerN = document.getElementById("data-shot-count");
   if (footerN) footerN.textContent = total;
+
+  // Season range + data-through stamps, so weekly refreshes never leave stale copy
+  const range = seasonRangeLabel();
+  document.querySelectorAll(".js-range").forEach(e => e.textContent = range);
+  document.querySelectorAll(".js-nseasons").forEach(e => e.textContent = nSeasons);
+  const thru = HEX_DATA.dataThrough
+    ? new Date(HEX_DATA.dataThrough + "T12:00:00").toLocaleDateString(undefined,
+        { month: "short", day: "numeric", year: "numeric" })
+    : "—";
+  document.querySelectorAll(".js-through").forEach(e => e.textContent = thru);
+  document.title = `Best shooter at every spot — NHL offensive zone, ${range}`;
+}
+
+function seasonRangeLabel() {
+  const ss = (HEX_DATA.seasons || []).slice().sort();
+  if (!ss.length) return "";
+  const L = HEX_DATA.seasonLabels || {};
+  return `${L[ss[0]] || ss[0]} → ${L[ss[ss.length - 1]] || ss[ss.length - 1]}`;
 }
 
 /* =====================================================================
