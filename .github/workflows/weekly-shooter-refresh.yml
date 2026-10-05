@@ -1,0 +1,65 @@
+# Weekly refresh of the NHL Shooter Atlas data (hockey.ridgelinemaps.com/shooting-atlas/)
+#
+# Every Monday this downloads the latest MoneyPuck shot data, rebuilds the
+# shooting-atlas/data-*.js files with _pipeline/update_atlas.py, and commits them.
+# GitHub Pages republishes the site automatically after the commit.
+#
+# Run it any time from the repo's Actions tab -> "Weekly shooter data refresh" -> Run workflow.
+# If a run fails (MoneyPuck down, schema change, data sanity check), GitHub emails you and
+# the live site keeps the previous week's data.
+
+name: Weekly shooter data refresh
+
+on:
+  schedule:
+    - cron: "23 11 * * 1"   # Mondays 11:23 UTC (5:23 am Mountain), after MoneyPuck's nightly update
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: shooter-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild shooter data
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python3 _pipeline/update_atlas.py build
+
+      - name: Commit updated data
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add shooting-atlas/data-*.js _pipeline/history _pipeline/state.json _pipeline/update_log.md
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "Weekly shooter data refresh ($(date -u +%Y-%m-%d))"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Pages rebuilds on push; this just makes sure it does.
+      - name: Request Pages build
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds" || true
