@@ -373,6 +373,18 @@
     z-index: 10;
   }
   body.dark #tooltip { background: rgba(22, 22, 22, 0.62); }
+  /* Phones / narrow layouts: dock the tooltip across the bottom of the rink
+     (blue-line end, the least information-dense part of the zone) instead of
+     floating it at the tap point where it would run off the edge. */
+  #tooltip.docked {
+    left: 6px !important; right: 6px; top: auto !important; bottom: 6px;
+    transform: none !important; min-width: 0; max-width: none; white-space: normal;
+    padding: 12px 12px 10px; max-height: 58%; overflow: auto;
+    background: rgba(252, 252, 251, 0.9);
+  }
+  body.dark #tooltip.docked { background: rgba(22, 22, 22, 0.9); }
+  #tooltip.docked .header-logo svg { height: 36px; }
+  #tooltip.docked .click-hint { display: none; }
   #tooltip .name  { font-weight: 600; font-size: 0.95rem; color: var(--fg-primary); }
   #tooltip .meta  { color: var(--fg-secondary); font-size: 0.74rem; margin-top: 1px; }
   #tooltip .sh-row {
@@ -1342,18 +1354,27 @@ function showTooltipForHex(hex, evt) {
   // offsetWidth / offsetHeight force a synchronous reflow, which is fine here
   // because the browser would have to lay out the tooltip before paint anyway.
   const rect = wrap.getBoundingClientRect();
+  const docked = rect.width < 560 || (window.matchMedia && matchMedia("(hover: none)").matches);
+  tooltip.classList.toggle("docked", docked);
+  if (docked) {
+    tooltip.style.left = tooltip.style.top = tooltip.style.transform = "";
+    tooltip.style.opacity = "1";
+    return;
+  }
   const px = evt.clientX - rect.left;
   const py = evt.clientY - rect.top;
   const tipW = tooltip.offsetWidth  || 300;
   const tipH = tooltip.offsetHeight || 200;
   const PAD  = 14;   // gap between cursor and tooltip edge
-  const willFlipX = px + tipW + PAD > rect.width;
-  const willFlipY = py - tipH - PAD < 0;
-  tooltip.style.left = `${px}px`;
-  tooltip.style.top  = `${py}px`;
-  tooltip.style.transform =
-    (willFlipX ? "translateX(calc(-100% - 14px))" : "translateX(14px)") + " " +
-    (willFlipY ? "translateY(8px)"               : "translateY(-100%)");
+  // Prefer right-of / above the cursor, flip when it won't fit, then clamp so
+  // no edge is ever cut off by the rink frame.
+  let left = (px + PAD + tipW <= rect.width) ? px + PAD : px - PAD - tipW;
+  let top  = (py - PAD - tipH >= 0) ? py - PAD - tipH : py + PAD;
+  left = Math.max(4, Math.min(left, rect.width  - tipW - 4));
+  top  = Math.max(4, Math.min(top,  rect.height - tipH - 4));
+  tooltip.style.transform = "none";
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top  = `${top}px`;
   tooltip.style.opacity = "1";
 }
 
@@ -1929,7 +1950,7 @@ function setupInteractions() {
 
   hexLayer.addEventListener("click", (e) => {
     const tgt = e.target.closest(".hex");
-    if (!tgt) return;
+    if (!tgt) { hideTooltip(); return; }
     const idx = +tgt.dataset.idx;
     const hex = HEX_DATA.hexes[idx];
     // Use the currently-filtered season+situation's top shooter for lock
@@ -1940,6 +1961,9 @@ function setupInteractions() {
       // Click on empty hex → unlock
       unlock();
     }
+    // Re-render for the tapped hex so the card reflects the new lock state
+    // (on touch screens there is no mousemove afterwards to refresh it).
+    showTooltipForHex(hex, e);
   });
 
   wrap.addEventListener("mouseleave", () => {
