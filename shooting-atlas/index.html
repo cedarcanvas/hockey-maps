@@ -373,16 +373,18 @@
     z-index: 10;
   }
   body.dark #tooltip { background: rgba(22, 22, 22, 0.62); }
-  /* Phones / narrow layouts: dock the tooltip across the bottom of the rink
-     (blue-line end, the least information-dense part of the zone) instead of
-     floating it at the tap point where it would run off the edge. */
+  /* Phones / narrow layouts: the card moves out of the rink into a slot just
+     below it, so it never covers the ice. It stays put (showing the last tapped
+     hex) instead of vanishing, acting as an info panel. */
   #tooltip.docked {
-    left: 6px !important; right: 6px; top: auto !important; bottom: 6px;
-    transform: none !important; min-width: 0; max-width: none; white-space: normal;
-    padding: 12px 12px 10px; max-height: 58%; overflow: auto;
-    background: rgba(252, 252, 251, 0.9);
+    position: relative; left: auto !important; top: auto !important; transform: none !important;
+    min-width: 0; max-width: none; white-space: normal;
+    margin-top: 10px; padding: 14px 14px 12px;
+    background: var(--bg-card); opacity: 1 !important;
+    -webkit-backdrop-filter: none; backdrop-filter: none;
   }
-  body.dark #tooltip.docked { background: rgba(22, 22, 22, 0.9); }
+  body.dark #tooltip.docked { background: var(--bg-card); }
+  #tooltip.docked:empty { display: none; }
   #tooltip.docked .header-logo svg { height: 36px; }
   #tooltip.docked .click-hint { display: none; }
   #tooltip .name  { font-weight: 600; font-size: 0.95rem; color: var(--fg-primary); }
@@ -711,6 +713,7 @@
       </svg>
       <div id="tooltip"></div>
     </div>
+    <div id="tooltip-slot"></div>
 
     <div class="legend">
       <div class="biv-legend" role="img" aria-label="Bivariate legend: y-axis (vertical) by x-axis (horizontal). Top-right cells are the strongest combined signal.">
@@ -1356,6 +1359,8 @@ function showTooltipForHex(hex, evt) {
   const rect = wrap.getBoundingClientRect();
   const docked = rect.width < 560 || (window.matchMedia && matchMedia("(hover: none)").matches);
   tooltip.classList.toggle("docked", docked);
+  const home = docked ? document.getElementById("tooltip-slot") : wrap;
+  if (home && tooltip.parentNode !== home) home.appendChild(tooltip);
   if (docked) {
     tooltip.style.left = tooltip.style.top = tooltip.style.transform = "";
     tooltip.style.opacity = "1";
@@ -1378,7 +1383,7 @@ function showTooltipForHex(hex, evt) {
   tooltip.style.opacity = "1";
 }
 
-function hideTooltip() { tooltip.style.opacity = "0"; }
+function hideTooltip() { if (!tooltip.classList.contains("docked")) tooltip.style.opacity = "0"; }
 
 /* =====================================================================
  * Lock / unlock — manage CSS classes
