@@ -211,6 +211,7 @@
     font-variant-numeric: tabular-nums;
   }
   .career-panel .cp-stats .dim { color: var(--fg-muted); }
+  .career-panel .cp-team { font: 600 12.5px/1 "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .03em; color: var(--fg-primary); }
   .career-panel .cp-totals {
     margin-top: 10px; padding-top: 8px;
     border-top: 1px dashed var(--border-row);
@@ -1083,6 +1084,16 @@ const BRAND = {
   UTA:['#69B3E7','#010101'], VAN:['#00205B','#00843D'], VGK:['#B4975A','#333F42'], WPG:['#041E42','#004C97'],
   WSH:['#C8102E','#041E42'],
 };
+// Team a player was on in a given season ({main, label}). p.st[season] is either
+// "COL" or [main, "COL/CAR/DAL"] for mid-season trades (main = most shots, label
+// = teams in the order he played for them). Falls back to the current team (p.t)
+// for the all-seasons view or data without per-season teams.
+function seasonTeam(p, season) {
+  const v = p && p.st && season && season !== "all" ? p.st[season] : null;
+  if (!v) return { main: (p && p.t) || "", label: (p && p.t) || "" };
+  return typeof v === "string" ? { main: v, label: v } : { main: v[0], label: v[1].replace(/\//g, " → ") };
+}
+
 function setTeamStripe(el, teamCode) {
   if (!el) return;
   const b = BRAND[(teamCode || "").toUpperCase()];
@@ -1315,21 +1326,22 @@ function showTooltipForHex(hex, evt) {
 
   let bioHtml = "";
   if (player) {
-    const tc = teamColor(player.t || "?");
+    const T = seasonTeam(player, currentSeason);
+    const tc = teamColor(T.main || "?");
     const bio = player.bio || {};
     const jersey = bio.num ? ` <span class="jersey">#${escapeHtml(bio.num)}</span>` : "";
     const lockTag = lockedPid ? ` <span class="badge lock">locked</span>` : "";
     const sitInName = sitTag ? ` ${sitTag}` : "";
-    const logoSvg = teamLogo(player.t);
+    const logoSvg = teamLogo(T.main);
     const logoHtml = logoSvg
-      ? `<div class="header-logo" role="img" aria-label="${escapeHtml(player.t || "")}">${logoSvg}</div>`
+      ? `<div class="header-logo" role="img" aria-label="${escapeHtml(T.main || "")}">${logoSvg}</div>`
       : "";
     bioHtml =
       `<div class="header-row">` +
         `<div class="header-text">` +
           `<div class="name">${escapeHtml(player.n)}${jersey}${lockTag}${sitInName}</div>` +
           `<div class="meta">` +
-            `<span class="team-chip" style="background:${tc.bg};color:${tc.fg}">${escapeHtml(player.t || "?")}</span>` +
+            `<span class="team-chip" style="background:${tc.bg};color:${tc.fg}">${escapeHtml(T.label || "?")}</span>` +
             `<span>${positionName(player.p)}</span>` +
           `</div>` +
         `</div>` +
@@ -1384,7 +1396,7 @@ function showTooltipForHex(hex, evt) {
       (hs.ls > 0 ? `<div class="lg-line">lg sample: ${hs.ls.toLocaleString()} S, ${hs.lg} G</div>` : "");
   }
 
-  setTeamStripe(tooltip, player && player.t);
+  setTeamStripe(tooltip, player && seasonTeam(player, currentSeason).main);
   tooltip.innerHTML = bioHtml + hexHtml;
 
   // Position at the cursor with edge-aware flipping.  Measure the actual
@@ -1580,10 +1592,10 @@ function updateZonePanel() {
     html += `<div class="empty-state">Not enough volume here: no one has ${L.minS}+ shots and ${L.minG}+ goals from this zone in this view.${currentSeason === "all" ? "" : " Try <b>All seasons</b>."}</div>`;
   }
   L.rows.forEach((r, i) => {
-    const tc = teamColor(r.p.t || "?");
+    const T = seasonTeam(r.p, currentSeason), tc = teamColor(T.main || "?");
     html += `<button type="button" class="zp-row${r.pid === lockedPid ? " on" : ""}" data-pid="${r.pid}" title="Lock ${escapeHtml(r.p.n)}">
       <span class="zp-rk">${i + 1}</span>
-      <span class="zp-nm">${escapeHtml(r.p.n)}<span class="team-chip" style="background:${tc.bg};color:${tc.fg}">${escapeHtml(r.p.t || "?")}</span></span>
+      <span class="zp-nm">${escapeHtml(r.p.n)}<span class="team-chip" style="background:${tc.bg};color:${tc.fg}">${escapeHtml(T.label || "?")}</span></span>
       <span class="zp-sh">${fmtPct(r.sh)}</span>
       <span class="zp-bar"><i style="width:${Math.max(4, 100 * (r.shp - L.lgRate) / span).toFixed(1)}%"></i></span>
       <span class="zp-sub"><span>${r.g} G / ${r.s} S</span><span>adj ${fmtPct(r.shp)}</span></span>
@@ -1687,14 +1699,15 @@ function updateLockBar() {
   const sitNote = currentSituation === "all" ? "" : ` (${currentSituation.toUpperCase()} only)`;
   const gtNote = currentGameType === "all" ? "" :
     ` (${currentGameType === "reg" ? "regular season only" : "playoffs only"})`;
-  const logoSvg = teamLogo(p.t);
+  const LT = seasonTeam(p, currentSeason);
+  const logoSvg = teamLogo(LT.main);
   const logoHtml = logoSvg
-    ? `<span class="team-logo" role="img" aria-label="${escapeHtml(p.t || "")}">${logoSvg}</span>`
+    ? `<span class="team-logo" role="img" aria-label="${escapeHtml(LT.main || "")}">${logoSvg}</span>`
     : "";
   lockBar.innerHTML =
     logoHtml +
     `<span class="who">${escapeHtml(p.n)}</span>` +
-    `<span class="dim">· ${escapeHtml(p.t)} · ${positionName(p.p)} · ` +
+    `<span class="dim">· ${escapeHtml(LT.label)} · ${positionName(p.p)} · ` +
     `${g} G / ${s.toLocaleString()} S in ${seasonLbl}${sitNote}${gtNote}</span>`;
 }
 
@@ -1725,7 +1738,7 @@ function updateCareerPanel() {
   }
   const p = HEX_DATA.players[lockedPid];
   if (!p) return;
-  setTeamStripe(panel, p.t);
+  setTeamStripe(panel, seasonTeam(p, currentSeason).main);
   const seasons = (HEX_DATA.seasons || []).slice().sort();
   const labels  = HEX_DATA.seasonLabels || {};
   const hs      = p.hs || {};
@@ -1768,7 +1781,7 @@ function updateCareerPanel() {
       html += `<div class="cp-row${isActive ? " active" : ""}" data-se="${r.se}">
         <div class="cp-season">${lbl}</div>
         <div class="cp-bar"><div class="cp-bar-fill" style="width:${barW}%"></div></div>
-        <div class="cp-stats">${r.g} G · ${r.s.toLocaleString()} S · ${sh}</div>
+        <div class="cp-stats"><span class="cp-team">${escapeHtml(seasonTeam(p, r.se).label)}</span> · ${r.g} G · ${r.s.toLocaleString()} S · ${sh}</div>
       </div>`;
     }
   }
