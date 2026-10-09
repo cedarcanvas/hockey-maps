@@ -803,7 +803,7 @@
       so low-traffic hexes get filled in too. Hexes with zero goals in the currently selected season stay gray.
     </p>
     <p>
-      <strong>Zones.</strong> The zone picker groups hexes into named regions — net front, low slot, high slot, the two faceoff circles, half-walls, corners, behind the net, and the three point lanes — and ranks shooters across the whole region with the same adjusted Sh% (shrunk toward that zone's own league rate) and a minimum shot count, so pooled samples are much larger than any single hex.
+      <strong>Zones.</strong> The zone picker groups hexes into named regions — net front, low slot, high slot, the two faceoff circles, half-walls, corners, behind the net, and the three point lanes — and ranks shooters across the whole region with the same adjusted Sh% (shrunk toward that zone's own league rate). To qualify, a player needs a minimum number of shots that scales with how busy the zone is (roughly 1 in every 400 of the zone's shots in a season, 1 in 800 across all seasons) plus at least 3 goals in a season or 8 overall, so a single lucky goal never tops a list.
     </p>
     <p>
       <strong>Interactive locking.</strong> Hovering shows the hex's own best shooter, their bio, and their team logo. <em>Clicking</em> a hex locks that player and switches the map into their personal heatmap —
@@ -1539,10 +1539,12 @@ function zoneLeaders(id, n = 10) {
   let ls = 0, lg = 0;
   for (const h of hexes) { const hs = hexStats(h, sit); ls += hs.ls; lg += hs.lg; }
   const lgRate = ls ? lg / ls : 0;
-  let minS = currentSeason === "all" ? 50 : 15;
-  if (currentGameType === "pof") minS = Math.ceil(minS / 4);
-  if (sit === "pp" || sit === "sh") minS = Math.ceil(minS / (sit === "sh" ? 5 : 2));
-  if (id === "behind" || id.endsWith("corner")) minS = Math.ceil(minS / 3);
+  // Volume bar scales with how busy the zone is under the current filters, so
+  // the slot demands real volume while quiet zones stay usable. Goals are
+  // required too (3/season, 8 all-time minimum), so one lucky goal never leads.
+  const all = currentSeason === "all";
+  const minS = Math.max(all ? 40 : 12, Math.round(ls / (all ? 800 : 400)));
+  const minG = Math.max(all ? 8 : 3, Math.round(0.75 * minS * lgRate));
   const keys = hexes.map(h => h.q + "," + h.r);
   const rows = [];
   for (const pid in HEX_DATA.players) {
@@ -1553,10 +1555,10 @@ function zoneLeaders(id, n = 10) {
       if (!cell) continue;
       const r = playerCellStats(cell, sit); s += r[0]; g += r[1];
     }
-    if (s >= minS && g >= 1) rows.push({ pid, p, s, g, sh: g / s, shp: (g + PRIOR_K_JS * lgRate) / (s + PRIOR_K_JS) });
+    if (s >= minS && g >= minG) rows.push({ pid, p, s, g, sh: g / s, shp: (g + PRIOR_K_JS * lgRate) / (s + PRIOR_K_JS) });
   }
   rows.sort((a, b) => b.shp - a.shp || b.g - a.g);
-  return { rows: rows.slice(0, n), qualified: rows.length, ls, lg, lgRate, minS };
+  return { rows: rows.slice(0, n), qualified: rows.length, ls, lg, lgRate, minS, minG };
 }
 const PRIOR_K_JS = (HEX_DATA && HEX_DATA.priorK) || 30;
 
@@ -1575,7 +1577,7 @@ function updateZonePanel() {
   let html = `<div class="cp-head"><button class="zp-clear" type="button" data-zone-clear>Clear</button>${escapeHtml(zoneLabel(currentZone))} leaders
     <div class="cp-sub">${seasonLbl} · ${sitLbl}${gtLbl} · league ${fmtPct(L.lgRate)} on ${L.ls.toLocaleString()} shots</div></div>`;
   if (!L.rows.length) {
-    html += `<div class="empty-state">No one has ${L.minS}+ shots and a goal from here in this view.</div>`;
+    html += `<div class="empty-state">Not enough volume here: no one has ${L.minS}+ shots and ${L.minG}+ goals from this zone in this view.${currentSeason === "all" ? "" : " Try <b>All seasons</b>."}</div>`;
   }
   L.rows.forEach((r, i) => {
     const tc = teamColor(r.p.t || "?");
@@ -1587,7 +1589,7 @@ function updateZonePanel() {
       <span class="zp-sub"><span>${r.g} G / ${r.s} S</span><span>adj ${fmtPct(r.shp)}</span></span>
     </button>`;
   });
-  html += `<div class="zp-note">Ranked by adjusted Sh% (shrunk toward the zone's league rate, k = ${PRIOR_K_JS}); minimum ${L.minS} shots · ${L.qualified} players qualify. Tap a name to lock them on the map.</div>`;
+  html += `<div class="zp-note">Ranked by adjusted Sh% (shrunk toward the zone's league rate, k = ${PRIOR_K_JS}); minimum ${L.minS} shots and ${L.minG} goals (scaled to this zone's volume) · ${L.qualified} players qualify. Tap a name to lock them on the map.</div>`;
   panel.innerHTML = html;
 }
 
