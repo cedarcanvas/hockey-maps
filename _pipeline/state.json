@@ -1,7 +1,7 @@
 {
   "lastBuild": {
-    "totalShots": 892903,
-    "players": 1798,
+    "totalShots": 894987,
+    "players": 1800,
     "hexes": 208,
     "seasons": [
       "2018",
@@ -15,10 +15,10 @@
       "2026"
     ],
     "current": "2026",
-    "currentShots": 3179,
-    "dataThrough": "2026-10-05",
+    "currentShots": 5263,
+    "dataThrough": "2026-10-09",
     "defaultSeason": "2025"
   },
-  "lastRun": "2026-10-05T19:44+00:00",
+  "lastRun": "2026-10-09T15:43+00:00",
   "lastRun_result": "ok"
 }

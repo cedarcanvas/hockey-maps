@@ -128,9 +128,11 @@ def write_text(path, text):
 
 
 # ----------------------------------------------------------------------------- raw -> compact rows
-COMPACT_HDR = ["season", "pid", "x", "y", "g", "sit", "pof"]
+COMPACT_HDR = ["season", "pid", "x", "y", "g", "sit", "pof", "team", "game"]
 NEED = ["xCordAdjusted", "yCordAdjusted", "goal", "season", "shooterPlayerId", "shooterName",
-        "isPlayoffGame", "homeSkatersOnIce", "awaySkatersOnIce", "isHomeTeam", "homeTeamCode", "awayTeamCode"]
+        "isPlayoffGame", "homeSkatersOnIce", "awaySkatersOnIce", "isHomeTeam", "homeTeamCode", "awayTeamCode",
+        "game_id"]
+TEAM_FIX = {"L.A": "LAK", "N.J": "NJD", "S.J": "SJS", "T.B": "TBL"}   # MoneyPuck's older codes
 
 def compact_rows_from_csv(fobj, meta):
     """Yield compact rows from a MoneyPuck shots CSV; fill meta[pid] = [name, team, season]."""
@@ -142,17 +144,18 @@ def compact_rows_from_csv(fobj, meta):
     I = [ix[n] for n in NEED]
     for row in rdr:
         try:
-            xc, yc, g, se, pid, nm, pof, hsk, ask, ih, ht, at = (row[i] for i in I)
-            pid = int(float(pid)); s = int(float(se))
+            xc, yc, g, se, pid, nm, pof, hsk, ask, ih, ht, at, gid = (row[i] for i in I)
+            pid = int(float(pid)); s = int(float(se)); gid = int(float(gid))
             home = ih in ("1", "1.0")
             my, th = (int(float(hsk)), int(float(ask))) if home else (int(float(ask)), int(float(hsk)))
         except (ValueError, IndexError):
             continue
         sit = "p" if my > th else ("s" if my < th else "e")
+        team = TEAM_FIX.get(ht if home else at, ht if home else at)
         m = meta.get(pid)
         if m is None or s >= m[2]:
-            meta[pid] = [nm, ht if home else at, s]
-        yield (s, pid, xc, yc, 1 if g in ("1", "1.0") else 0, sit, 1 if pof in ("1", "1.0") else 0)
+            meta[pid] = [nm, team, s]
+        yield (s, pid, xc, yc, 1 if g in ("1", "1.0") else 0, sit, 1 if pof in ("1", "1.0") else 0, team, gid)
 
 def season_zip_rows(season, meta):
     z = TMP / f"shots_{season}.zip"
@@ -168,8 +171,10 @@ def read_history():
     if HIST_GZ.exists():
         with gzip.open(HIST_GZ, "rt") as f:
             rdr = csv.reader(f); next(rdr)
-            for s, pid, x, y, g, sit, pof in rdr:
-                r = (int(s), int(pid), x, y, int(g), sit, int(pof)); rows.append(r); seasons.add(r[0])
+            for rec in rdr:
+                s, pid, x, y, g, sit, pof = rec[:7]
+                team, game = (rec[7], int(rec[8])) if len(rec) >= 9 else ("", 0)
+                r = (int(s), int(pid), x, y, int(g), sit, int(pof), team, game); rows.append(r); seasons.add(r[0])
     meta = {int(k): v for k, v in json.loads(HIST_META.read_text()).items()} if HIST_META.exists() else {}
     return rows, seasons, meta
 
@@ -244,8 +249,9 @@ def aggregate(rows, meta, bios):
     player_hex = nd(lambda: nd(lambda: nd(lambda: nd(lambda: nd(lambda: [0, 0])))))  # hk>scope>gt>sit>pid
     cells = nd(lambda: nd(lambda: nd(lambda: [0] * 16)))                             # pid>season>hex
     season_totals, playoff_totals = defaultdict(int), defaultdict(int)
+    pteam = defaultdict(dict)        # (pid, season) -> {team: [first_game, shots]}
 
-    for s, pid, x, y, g, sit, pof in rows:
+    for s, pid, x, y, g, sit, pof, team, game in rows:
         if pid <= 0: continue                    # MoneyPuck's placeholder for an unidentified shooter
         try: depth, lateral = GOAL_LINE_X - float(x), -float(y)
         except ValueError: continue
@@ -263,35 +269,52 @@ def aggregate(rows, meta, bios):
         if pof: c[8] += 1; c[9] += g; c[8 + o] += 1; c[9 + o] += g
         season_totals[se] += 1
         if pof: playoff_totals[se] += 1
+        if team:
+            tt = pteam[(pid, se)].get(team)
+            if tt is None: pteam[(pid, se)][team] = [game, 1]
+            else:
+                tt[1] += 1
+                if game < tt[0]: tt[0] = game
 
     seasons = sorted(season_totals)
+
+    def season_team(pid, se):
+        """(main team = most shots that season, 'COL/CAR/DAL' in the order he played for them)."""
+        d = pteam.get((pid, se))
+        if not d: return None
+        order = sorted(d, key=lambda t: d[t][0])
+        main = max(d, key=lambda t: (d[t][1], -d[t][0]))
+        return main, "/".join(order)
 
     def who(pid):
         if pid in bios and bios[pid][0]: return bios[pid][:3]
         m = meta.get(pid)
         return (m[0], m[1], "") if m else (str(pid), "", "")
 
-    def best(cands, lg_sh):
+    def best(cands, lg_sh, scope="all"):
         for th in range(PRIMARY_MIN_SHOTS, MIN_SHOTS_FLOOR - 1, -1):
             el = [(pid, s, g) for pid, (s, g) in cands.items() if s >= th and g >= 1]
             if not el: continue
             pid, s, g, sh, shp = min(((pid, s, g, g / s, (g + PRIOR_K * lg_sh) / (s + PRIOR_K)) for pid, s, g in el),
                                      key=lambda t: (-t[4], -t[3], -t[1], t[0]))
             n, t, p = who(pid)
+            if scope != "all":                      # show the team he played for that season
+                st_ = season_team(pid, scope)
+                if st_: t = st_[0]
             return {"id": pid, "n": n, "t": t, "p": p, "s": s, "g": g,
                     "sh": round(sh, 4), "shp": round(shp, 4), "th": th}
         return None
 
-    def scope_record(sg, pmap):
+    def scope_record(sg, pmap, scope):
         if sg["all"][0] == 0: return None
         rec = {"all": {"ls": sg["all"][0], "lg": sg["all"][1]}, "sit": {}}
-        t = best(pmap.get("all", {}), sg["all"][1] / sg["all"][0])
+        t = best(pmap.get("all", {}), sg["all"][1] / sg["all"][0], scope)
         if t: rec["all"]["top"] = t
         for sk in ("es", "pp", "sh"):
             s, g = sg.get(sk, (0, 0))
             if not s: continue
             rec["sit"][sk] = {"ls": s, "lg": g}
-            t = best(pmap.get(sk, {}), g / s)
+            t = best(pmap.get(sk, {}), g / s, scope)
             if t: rec["sit"][sk]["top"] = t
         return rec
 
@@ -309,12 +332,12 @@ def aggregate(rows, meta, bios):
                 for sk, pm in player_hex[hk][scope].get(gt, {}).items():
                     for pid, (s, g) in pm.items():
                         comb_p[sk][pid][0] += s; comb_p[sk][pid][1] += g
-            rec = scope_record(comb_sg, comb_p)
+            rec = scope_record(comb_sg, comb_p, scope)
             if not rec: continue
             by_g = {}
             for gt in ("reg", "pof"):
                 if gt in gts:
-                    gr = scope_record(gts[gt], player_hex[hk][scope][gt])
+                    gr = scope_record(gts[gt], player_hex[hk][scope][gt], scope)
                     if gr: by_g[gt] = gr
             if by_g: rec["byG"] = by_g
             by_s[scope] = rec
@@ -330,7 +353,11 @@ def aggregate(rows, meta, bios):
                 if c[1] > bg: bg, bh = c[1], k
         if not all_s: continue
         n, t, p = who(pid)
-        players[str(pid)] = {"n": n, "t": t, "p": p, "s": all_s, "g": all_g, "bh": bh,
+        st = {}
+        for se in sorted(by_se):
+            v = season_team(pid, se)
+            if v: st[se] = v[0] if v[0] == v[1] else [v[0], v[1]]
+        players[str(pid)] = {"n": n, "t": t, "p": p, "s": all_s, "g": all_g, "bh": bh, "st": st,
                              "hs": {se: dict(by_se[se]) for se in sorted(by_se)},
                              "bio": bios.get(pid, (None, None, None, {}))[3]}
     return seasons, season_totals, playoff_totals, hexes, players
@@ -344,7 +371,7 @@ def split_players(players, cur):
         old = {se: v for se, v in p["hs"].items() if int(se) < cur}
         new = {se: v for se, v in p["hs"].items() if int(se) >= cur}
         if old: hist[pid] = {"hs": old}
-        rec = {k: p[k] for k in ("n", "t", "p", "s", "g", "bh", "bio")}
+        rec = {k: p[k] for k in ("n", "t", "p", "s", "g", "bh", "bio", "st")}
         if new: rec["hs"] = new
         current[pid] = rec
     # contiguous, roughly equal-size history chunks (sorted pids -> deterministic boundaries)
