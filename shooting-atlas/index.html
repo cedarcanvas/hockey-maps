@@ -263,6 +263,9 @@
   .hex.empty { fill: var(--bg-empty-hex); }
 
   body.locked .hex                  { opacity: var(--hex-locked-dim-opacity); }
+  /* Zone focus: dim everything outside the selected region, ring the inside */
+  body.zoned .hex.out-zone          { opacity: 0.16 !important; }
+  body.zoned .hex.in-zone           { stroke: var(--fg-primary); stroke-width: 1.1; stroke-opacity: .55; }
   body.locked .hex.has-locked       { opacity: 1; stroke: var(--hex-locked-stroke); stroke-width: 0.6; }
   body.locked .hex.has-locked.hover { stroke: var(--hex-hover-stroke); stroke-width: 2; }
   body.locked .hex.locked-origin    { stroke: var(--hex-locked-origin); stroke-width: 2.6;
@@ -485,6 +488,30 @@
   .season-select:hover { border-color: var(--border-medium); }
   .season-select:focus { outline: none; border-color: var(--fg-link); box-shadow: var(--shadow-focus); }
 
+  /* Zone picker + leaders --------------------------------------------- */
+  .side-col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .zone-select { margin-left: 8px; }
+  .zone-select.active { border-color: var(--fg-accent); color: var(--fg-accent); }
+  .zone-panel .zp-row {
+    display: grid; grid-template-columns: 18px 1fr auto; column-gap: 8px; row-gap: 3px;
+    align-items: baseline; padding: 6px 8px; border-radius: 4px; cursor: pointer;
+    border-left: 3px solid transparent; width: 100%; background: none; border-top: 0;
+    border-right: 0; border-bottom: 0; text-align: left; color: inherit; font: inherit;
+  }
+  .zone-panel .zp-row:hover { background: var(--bg-button-hov); }
+  .zone-panel .zp-row.on { background: var(--bg-callout); border-left-color: var(--fg-accent); }
+  .zone-panel .zp-rk { font: 600 13px/1 "Barlow Condensed", "Arial Narrow", sans-serif; color: var(--fg-muted); text-align: right; }
+  .zone-panel .zp-nm { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .zone-panel .zp-nm .team-chip { font: 700 10px/1 "Barlow Condensed", sans-serif; padding: 2px 4px; border-radius: 3px; margin-left: 5px; letter-spacing: .04em; vertical-align: 1px; }
+  .zone-panel .zp-sh { font: 600 17px/1 "Barlow Condensed", "Arial Narrow", sans-serif; color: var(--fg-accent); font-variant-numeric: tabular-nums; }
+  .zone-panel .zp-sub { grid-column: 2 / -1; display: flex; justify-content: space-between; gap: 8px;
+    font-size: 11.5px; color: var(--fg-secondary); font-variant-numeric: tabular-nums; }
+  .zone-panel .zp-bar { grid-column: 2 / -1; height: 4px; background: var(--border-row); border-radius: 2px; overflow: hidden; }
+  .zone-panel .zp-bar i { display: block; height: 100%; background: var(--fg-accent); border-radius: 2px; }
+  .zone-panel .zp-note { font-size: 11.5px; color: var(--fg-muted); margin-top: 8px; line-height: 1.45; }
+  .zone-panel .zp-clear { float: right; font: 500 12px "Source Sans 3", sans-serif; border: 1px solid var(--border-light);
+    background: var(--bg-button); color: var(--fg-secondary); border-radius: 6px; padding: 2px 8px; cursor: pointer; }
+
   /* Tooltip — compact bio + hex stats, follows the cursor */
   #tooltip { min-width: 260px; max-width: 320px; }
   #tooltip .name { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -695,6 +722,9 @@
         <button type="button" data-gt="reg" aria-pressed="false" title="Regular season only">Reg</button>
         <button type="button" data-gt="pof" aria-pressed="false" title="Playoffs only">PO</button>
       </div>
+      <select id="zone-select" class="season-select zone-select" aria-label="Ice region">
+        <!-- populated by JS from ZONES -->
+      </select>
     </div>
 
     <div id="rink-wrap">
@@ -753,9 +783,12 @@
     <div class="stats-line" id="stats-line"></div>
   </div>
 
+  <div class="side-col">
+  <aside id="zone-panel" class="career-panel zone-panel" aria-label="Zone leaders" hidden></aside>
   <aside id="career-panel" class="career-panel" aria-label="Career timeline for locked player">
     <div class="empty-state">Lock a player by clicking any hex to see their per-season career totals.</div>
   </aside>
+  </div>
   </div>
 
   <footer>
@@ -768,6 +801,9 @@
       A player must have scored <strong>at least 1 goal</strong> from the hex to qualify — a 0-for-N shooter can never own a location.
       The shot-attempt threshold starts at <strong>8</strong> and steps down (8 → 7 → 6 → … → 1) until a goal-scorer is found,
       so low-traffic hexes get filled in too. Hexes with zero goals in the currently selected season stay gray.
+    </p>
+    <p>
+      <strong>Zones.</strong> The zone picker groups hexes into named regions — net front, low slot, high slot, the two faceoff circles, half-walls, corners, behind the net, and the three point lanes — and ranks shooters across the whole region with the same adjusted Sh% (shrunk toward that zone's own league rate) and a minimum shot count, so pooled samples are much larger than any single hex.
     </p>
     <p>
       <strong>Interactive locking.</strong> Hovering shows the hex's own best shooter, their bio, and their team logo. <em>Clicking</em> a hex locks that player and switches the map into their personal heatmap —
@@ -1440,7 +1476,151 @@ function applyGoalLabels() {
  * Empty hexes — original or "no-shots-from-locked-player" — fall back
  * to the dim CSS color via the .empty class.
  * ===================================================================== */
+/* =====================================================================
+ * Ice regions ("zones").  Each hex is assigned to one named region from its
+ * centre in rink-local feet: cx lateral (negative = attacking left = screen
+ * left), cy depth from the goal line.  Faceoff dots sit at (±22, 20).
+ * ===================================================================== */
+const ZONES = [
+  { id: "all",         label: "Whole zone" },
+  { id: "homeplate",   label: "Home plate (all slot)", parts: ["netfront", "lowslot", "highslot"] },
+  { id: "netfront",    label: "Net front" },
+  { id: "lowslot",     label: "Low slot" },
+  { id: "highslot",    label: "High slot" },
+  { id: "leftcircle",  label: "Left circle" },
+  { id: "rightcircle", label: "Right circle" },
+  { id: "leftwall",    label: "Left half-wall" },
+  { id: "rightwall",   label: "Right half-wall" },
+  { id: "leftcorner",  label: "Left corner" },
+  { id: "rightcorner", label: "Right corner" },
+  { id: "behind",      label: "Behind the net" },
+  { id: "leftpoint",   label: "Left point" },
+  { id: "pointc",      label: "Center point" },
+  { id: "rightpoint",  label: "Right point" },
+];
+function regionOf(cx, cy) {
+  const ax = Math.abs(cx), side = cx < 0 ? "left" : "right";
+  if (cy < 0 && ax <= 10.5)                return "behind";
+  if (cy <= 6 && ax <= 7.5)                return "netfront";
+  if (cy >= 6 && cy <= 18 && ax <= 11.5)   return "lowslot";
+  if (cy >= 22 && cy <= 42 && ax <= 14)    return "highslot";
+  if (cy >= 48)                            return ax <= 10 ? "pointc" : side + "point";
+  if (Math.hypot(ax - 22, cy - 20) <= 16)  return side + "circle";
+  if (cy <= 6)                             return side + "corner";
+  return side + "wall";
+}
+let currentZone = "all";
+function zoneHexes(id) {
+  if (id === "all") return HEX_DATA.hexes;
+  const z = ZONES.find(z => z.id === id);
+  const parts = new Set(z && z.parts ? z.parts : [id]);
+  return HEX_DATA.hexes.filter(h => parts.has(regionOf(h.cx, h.cy)));
+}
+function zoneLabel(id) { const z = ZONES.find(z => z.id === id); return z ? z.label : id; }
+
+function applyZoneClasses() {
+  const zoned = currentZone !== "all";
+  document.body.classList.toggle("zoned", zoned);
+  const inZone = new Set(zoned ? zoneHexes(currentZone).map(h => h.q + "," + h.r) : []);
+  document.querySelectorAll(".hex").forEach(el => {
+    el.classList.toggle("in-zone",  zoned && inZone.has(el.dataset.key));
+    el.classList.toggle("out-zone", zoned && !inZone.has(el.dataset.key));
+  });
+  const sel = document.getElementById("zone-select");
+  if (sel) sel.classList.toggle("active", zoned);
+}
+
+// Leaders for the selected zone under the active season / situation / game type.
+// Players are pooled across the zone's hexes and ranked by empirical-Bayes Sh%
+// (prior k = 30 toward the zone's own league rate) with a minimum shot count,
+// the same method the per-hex "best shooter" uses.
+function zoneLeaders(id, n = 10) {
+  const hexes = zoneHexes(id), sit = currentSituation;
+  let ls = 0, lg = 0;
+  for (const h of hexes) { const hs = hexStats(h, sit); ls += hs.ls; lg += hs.lg; }
+  const lgRate = ls ? lg / ls : 0;
+  let minS = currentSeason === "all" ? 50 : 15;
+  if (currentGameType === "pof") minS = Math.ceil(minS / 4);
+  if (sit === "pp" || sit === "sh") minS = Math.ceil(minS / (sit === "sh" ? 5 : 2));
+  if (id === "behind" || id.endsWith("corner")) minS = Math.ceil(minS / 3);
+  const keys = hexes.map(h => h.q + "," + h.r);
+  const rows = [];
+  for (const pid in HEX_DATA.players) {
+    const p = HEX_DATA.players[pid];
+    let s = 0, g = 0;
+    for (const k of keys) {
+      const cell = getPlayerCell(p, k);
+      if (!cell) continue;
+      const r = playerCellStats(cell, sit); s += r[0]; g += r[1];
+    }
+    if (s >= minS && g >= 1) rows.push({ pid, p, s, g, sh: g / s, shp: (g + PRIOR_K_JS * lgRate) / (s + PRIOR_K_JS) });
+  }
+  rows.sort((a, b) => b.shp - a.shp || b.g - a.g);
+  return { rows: rows.slice(0, n), qualified: rows.length, ls, lg, lgRate, minS };
+}
+const PRIOR_K_JS = (HEX_DATA && HEX_DATA.priorK) || 30;
+
+function updateZonePanel() {
+  const panel = document.getElementById("zone-panel");
+  if (!panel) return;
+  if (currentZone === "all") { panel.hidden = true; panel.innerHTML = ""; return; }
+  panel.hidden = false;
+  const L = zoneLeaders(currentZone);
+  const seasonLbl = currentSeason === "all" ? "all seasons"
+    : (HEX_DATA.seasonLabels && HEX_DATA.seasonLabels[currentSeason]) || currentSeason;
+  const sitLbl = { all: "all situations", es: "even strength", pp: "power play", sh: "short-handed" }[currentSituation];
+  const gtLbl = currentGameType === "all" ? "" : currentGameType === "reg" ? " · regular season" : " · playoffs";
+  // Bars show how far each player's adjusted rate sits above the zone's league rate
+  const top = L.rows.length ? L.rows[0].shp : 1, span = Math.max(top - L.lgRate, 1e-6);
+  let html = `<div class="cp-head"><button class="zp-clear" type="button" data-zone-clear>Clear</button>${escapeHtml(zoneLabel(currentZone))} leaders
+    <div class="cp-sub">${seasonLbl} · ${sitLbl}${gtLbl} · league ${fmtPct(L.lgRate)} on ${L.ls.toLocaleString()} shots</div></div>`;
+  if (!L.rows.length) {
+    html += `<div class="empty-state">No one has ${L.minS}+ shots and a goal from here in this view.</div>`;
+  }
+  L.rows.forEach((r, i) => {
+    const tc = teamColor(r.p.t || "?");
+    html += `<button type="button" class="zp-row${r.pid === lockedPid ? " on" : ""}" data-pid="${r.pid}" title="Lock ${escapeHtml(r.p.n)}">
+      <span class="zp-rk">${i + 1}</span>
+      <span class="zp-nm">${escapeHtml(r.p.n)}<span class="team-chip" style="background:${tc.bg};color:${tc.fg}">${escapeHtml(r.p.t || "?")}</span></span>
+      <span class="zp-sh">${fmtPct(r.sh)}</span>
+      <span class="zp-bar"><i style="width:${Math.max(4, 100 * (r.shp - L.lgRate) / span).toFixed(1)}%"></i></span>
+      <span class="zp-sub"><span>${r.g} G / ${r.s} S</span><span>adj ${fmtPct(r.shp)}</span></span>
+    </button>`;
+  });
+  html += `<div class="zp-note">Ranked by adjusted Sh% (shrunk toward the zone's league rate, k = ${PRIOR_K_JS}); minimum ${L.minS} shots · ${L.qualified} players qualify. Tap a name to lock them on the map.</div>`;
+  panel.innerHTML = html;
+}
+
+function setZone(id) {
+  currentZone = id;
+  const sel = document.getElementById("zone-select");
+  if (sel && sel.value !== id) sel.value = id;
+  applyZoneClasses();
+  updateZonePanel();
+}
+
+function setupZones() {
+  const sel = document.getElementById("zone-select");
+  if (!sel) return;
+  sel.innerHTML = ZONES.map(z => `<option value="${z.id}">${z.id === "all" ? "Zone: all of it" : z.label}</option>`).join("");
+  sel.addEventListener("change", e => setZone(e.target.value));
+  const panel = document.getElementById("zone-panel");
+  panel.addEventListener("click", e => {
+    if (e.target.closest("[data-zone-clear]")) { setZone("all"); return; }
+    const row = e.target.closest(".zp-row");
+    if (row) lockToPlayer(row.dataset.pid, null);
+  });
+}
+
+// Keep the zone view in sync with every filter / lock change (they all repaint fills).
+let _zoneRaf = 0;
+function refreshZoneSoon() {
+  if (currentZone === "all" || _zoneRaf) return;
+  _zoneRaf = requestAnimationFrame(() => { _zoneRaf = 0; applyZoneClasses(); updateZonePanel(); });
+}
+
 function applyHexFills() {
+  refreshZoneSoon();
   const hexes = document.querySelectorAll(".hex");
   const pdata = lockedPid ? HEX_DATA.players[lockedPid] : null;
 
@@ -2053,6 +2233,7 @@ function init() {
   setupSituationToggle();
   setupGameTypeToggle();
   setupSeasonSelect();
+  setupZones();
   updateLegend();
   updateCareerPanel();     // renders empty-state until a player is locked
   setStatsLine();
