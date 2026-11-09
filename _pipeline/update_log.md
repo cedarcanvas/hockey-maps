@@ -8,3 +8,4 @@
 - 2026-10-19 17:31 UTC — 900,806 shots, 1,808 shooters; 2026-27: 11,082 shots through 2026-10-19; page opens on 2025-26 (14s)
 - 2026-10-26 17:25 UTC — 904,845 shots, 1,812 shooters; 2026-27: 15,121 shots through 2026-10-26; page opens on 2025-26 (14s)
 - 2026-11-02 20:49 UTC — 908,669 shots, 1,816 shooters; 2026-27: 18,945 shots through 2026-11-02; page opens on 2025-26 (13s)
+- 2026-11-09 21:28 UTC — 912,953 shots, 1,819 shooters; 2026-27: 23,229 shots through 2026-11-09; page opens on 2025-26 (13s)
