@@ -19,59 +19,59 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2028%2032%22%3E%3Cpath%20d%3D%22M2%2012h3M23%2012h3M2%2022h3.6M22.4%2022h3.6%22%20stroke%3D%22%231b2a35%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20fill-rule%3D%22evenodd%22%20fill%3D%22%23f4f1ea%22%20stroke%3D%22%231b2a35%22%20stroke-width%3D%221.2%22%20d%3D%22M14%201.5C8.2%201.5%205%206.6%205%2014c0%208.6%203.9%2016.5%209%2016.5s9-7.9%209-16.5c0-7.4-3.2-12.5-9-12.5ZM8.4%2013.2c1.4-1.3%203.4-1.4%204.4-.2-.6%201.7-2.8%202.4-4.4.2Zm11.2%200c-1.4-1.3-3.4-1.4-4.4-.2.6%201.7%202.8%202.4%204.4.2ZM10.9%205.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8Zm3.1-.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8Zm3.1.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8ZM12.4%2017.6h3.2v1.2h-3.2ZM11.4%2021.4h1.2v4.2h-1.2Zm2%200h1.2v4.6h-1.2Zm2%200h1.2v4.2h-1.2Z%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 [hidden]{display:none!important}
 :root{
   color-scheme: light;
-  --bg:#e9eef1; --panel:#fbfcfc; --panel-2:#eef2f4; --ink:#14212b; --ink-2:#4b5a66; --ink-3:#83909a;
-  --line:#d9e0e5; --ocean:#d3e0e8; --ocean-edge:#b3c6d2; --land:#fafbfb; --land-edge:#b9c3c9;
-  --border:#c7d0d6; --grat:rgba(40,80,110,.10); --dot:#6b7b87;
-  --label:#1f2d38; --label-halo:rgba(250,251,251,.92);
-  --accent:#d6392e; --accent-soft:rgba(214,57,46,.14);
-  --focus:#14212b; --shadow:0 10px 30px rgba(18,33,43,.14);
+  --bg:#f6f3ed; --panel:#ffffff; --panel-2:#efe9dd; --ink:#2b2724; --ink-2:#5b5348; --ink-3:#857a6c;
+  --line:#ddd6c9; --ocean:#d3e0e8; --ocean-edge:#b3c6d2; --land:#fbf9f5; --land-edge:#c9bfae;
+  --border:#d2c9bb; --grat:rgba(40,80,110,.10); --dot:#7a7062;
+  --label:#2b2724; --label-halo:rgba(251,249,245,.92);
+  --accent:#c2531f; --accent-soft:rgba(194,83,31,.14);
+  --focus:#2b2724; --shadow:0 10px 30px rgba(43,39,36,.14);
   --glow:rgba(90,140,170,.18);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme: dark;
-    --bg:#0a1016; --panel:#111a21; --panel-2:#17222b; --ink:#e7edf1; --ink-2:#a4b1ba; --ink-3:#6f7d87;
-    --line:#24313b; --ocean:#0c1620; --ocean-edge:#1f3242; --land:#19242d; --land-edge:#394955;
-    --border:#3a4955; --grat:rgba(140,180,210,.07); --dot:#8d9ca6;
-    --label:#d8e1e6; --label-halo:rgba(17,26,33,.9);
-    --accent:#ff6a5c; --accent-soft:rgba(255,106,92,.18);
-    --focus:#e7edf1; --shadow:0 10px 30px rgba(0,0,0,.5); --glow:rgba(90,150,200,.14);
+    --bg:#16130f; --panel:#201c17; --panel-2:#2a241d; --ink:#f1ece4; --ink-2:#b7ad9f; --ink-3:#908676;
+    --line:#3a332b; --ocean:#0c1620; --ocean-edge:#1f3242; --land:#2c2620; --land-edge:#4d443a;
+    --border:#4d443a; --grat:rgba(140,180,210,.07); --dot:#9c9284;
+    --label:#e8e1d6; --label-halo:rgba(32,28,23,.9);
+    --accent:#f08a4b; --accent-soft:rgba(240,138,75,.18);
+    --focus:#f1ece4; --shadow:0 10px 30px rgba(0,0,0,.5); --glow:rgba(90,150,200,.14);
   }
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
-  --bg:#0a1016; --panel:#111a21; --panel-2:#17222b; --ink:#e7edf1; --ink-2:#a4b1ba; --ink-3:#6f7d87;
-  --line:#24313b; --ocean:#0c1620; --ocean-edge:#1f3242; --land:#19242d; --land-edge:#394955;
-  --border:#3a4955; --grat:rgba(140,180,210,.07); --dot:#8d9ca6;
-  --label:#d8e1e6; --label-halo:rgba(17,26,33,.9);
-  --accent:#ff6a5c; --accent-soft:rgba(255,106,92,.18);
-  --focus:#e7edf1; --shadow:0 10px 30px rgba(0,0,0,.5); --glow:rgba(90,150,200,.14);
+  --bg:#16130f; --panel:#201c17; --panel-2:#2a241d; --ink:#f1ece4; --ink-2:#b7ad9f; --ink-3:#908676;
+  --line:#3a332b; --ocean:#0c1620; --ocean-edge:#1f3242; --land:#2c2620; --land-edge:#4d443a;
+  --border:#4d443a; --grat:rgba(140,180,210,.07); --dot:#9c9284;
+  --label:#e8e1d6; --label-halo:rgba(32,28,23,.9);
+  --accent:#f08a4b; --accent-soft:rgba(240,138,75,.18);
+  --focus:#f1ece4; --shadow:0 10px 30px rgba(0,0,0,.5); --glow:rgba(90,150,200,.14);
 }
 #pirate[aria-pressed="true"],#railbtn[aria-pressed="true"],#allteams[aria-pressed="true"]{color:var(--accent)}
 .note.rail{border-left:3px solid var(--accent);padding-left:8px}
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 "Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;overflow:hidden}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 #map{position:fixed;inset:0;display:block;touch-action:none;cursor:grab}
 #map.dragging{cursor:grabbing}
 #map.hovering{cursor:pointer}
-.disp{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
+.disp{font-family:"Libre Franklin","Arial Narrow",system-ui,sans-serif}
 .num{font-variant-numeric:tabular-nums}
 
 #panel{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:16px;bottom:16px;width:380px;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;z-index:5}
 .head{padding:16px 16px 10px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px;position:relative}
 .head::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--team1) 0 70%,var(--team2) 70% 100%);transition:background .4s}
-.head h1{margin:0;font:400 30px/1.02 "IM Fell English",Georgia,serif;letter-spacing:0}
+.head h1{margin:0;font:700 25px/1.1 "Libre Baskerville",Georgia,serif;letter-spacing:-.01em}
 .head .sub{color:var(--ink-3);font-size:12.5px;margin-top:3px}
 .search{position:relative}
-.search input{width:100%;font:500 15px "Source Sans 3",system-ui,sans-serif;padding:8px 10px 8px 32px;border-radius:8px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);outline:none}
+.search input{width:100%;font:500 15px "Libre Franklin",system-ui,sans-serif;padding:8px 10px 8px 32px;border-radius:8px;border:1px solid var(--line);background:var(--panel-2);color:var(--ink);outline:none}
 .search input:focus{border-color:var(--focus);background:var(--panel)}
 .search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
 #sugg{position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);z-index:3;max-height:280px;overflow:auto}
@@ -80,7 +80,7 @@ button{font:inherit;color:inherit}
 #sugg small{color:var(--ink-3)}
 
 #teams{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
-.tchip{display:grid;place-items:center;min-height:26px;border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:4px 0 3px;cursor:pointer;font:600 13px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.03em;position:relative;color:var(--ink-2)}
+.tchip{display:grid;place-items:center;min-height:26px;border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:4px 0 3px;cursor:pointer;font:600 13px/1 "Libre Franklin","Arial Narrow",sans-serif;letter-spacing:.03em;position:relative;color:var(--ink-2)}
 .tchip::before{content:"";position:absolute;left:5px;right:5px;top:-1px;height:3px;border-radius:0 0 2px 2px;background:linear-gradient(90deg,var(--tc) 60%,var(--tc2) 60%)}
 .tchip.haslogo{padding:3px 0}
 .tchip.haslogo span{display:none}
@@ -101,11 +101,11 @@ button{font:inherit;color:inherit}
 .pcardhead{display:flex;gap:10px;align-items:center}
 .jn{color:var(--team)}
 .tt h2,.pcard h2{color:var(--team)}
-.tt h2{margin:0;font:400 27px/1.02 "IM Fell English",Georgia,serif}
+.tt h2{margin:0;font:700 22px/1.1 "Libre Baskerville",Georgia,serif}
 .tt .loc{color:var(--ink-3);font-size:12.5px;margin-top:2px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .stat{padding:2px 0}
-.stat b{display:block;font:600 20px/1.05 "Barlow Condensed","Arial Narrow",sans-serif;font-variant-numeric:tabular-nums}
+.stat b{display:block;font:600 20px/1.05 "Libre Franklin","Arial Narrow",sans-serif;font-variant-numeric:tabular-nums}
 .stat span{font-size:12px;color:var(--ink-3);line-height:1.25;display:block;margin-top:2px}
 .bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin-top:12px;background:var(--panel-2)}
 .bar i{display:block;height:100%}
@@ -115,16 +115,16 @@ button{font:inherit;color:inherit}
 .sort{display:flex;gap:4px;align-items:center;margin:14px 0 4px;font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em}
 .sort button{border:1px solid var(--line);background:none;border-radius:5px;padding:2px 7px;font-size:11.5px;color:var(--ink-2);cursor:pointer;text-transform:none;letter-spacing:0}
 .sort button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink);border-color:var(--ink-3)}
-.grp h3{margin:10px 0 2px;font:600 11px "Source Sans 3",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.grp h3{margin:10px 0 2px;font:600 11px "Libre Franklin",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
 .prow{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:baseline;padding:5px 6px;border-radius:6px;cursor:pointer;width:100%;border:0;background:none;text-align:left}
 .prow:hover,.prow.hl{background:var(--panel-2)}
-.prow .no{font:600 15px/1 "Barlow Condensed",sans-serif;color:var(--team);text-align:right;font-variant-numeric:tabular-nums}
+.prow .no{font:600 15px/1 "Libre Franklin",sans-serif;color:var(--team);text-align:right;font-variant-numeric:tabular-nums}
 .prow .nm{font-weight:600}
 .prow .bp{font-size:12px;color:var(--ink-3)}
 .prow .km{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
 
-.pcard .pos{font:600 13px "Barlow Condensed",sans-serif;letter-spacing:.05em;color:var(--ink-3);text-transform:uppercase}
-.pcard h2{margin:2px 0 0;font:400 30px/1.02 "IM Fell English",Georgia,serif}
+.pcard .pos{font:600 13px "Libre Franklin",sans-serif;letter-spacing:.05em;color:var(--ink-3);text-transform:uppercase}
+.pcard h2{margin:2px 0 0;font:700 24px/1.1 "Libre Baskerville",Georgia,serif}
 .pcard .meta{color:var(--ink-2);font-size:13px;margin-top:4px}
 .selbar{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;align-items:center}
 .selchip{display:inline-flex;align-items:center;gap:2px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:99px;padding:1px 3px 1px 9px;font-size:12px;font-weight:600}
@@ -153,7 +153,7 @@ button{font:inherit;color:inherit}
 .tl{list-style:none;margin:10px 0 0;padding:0;position:relative}
 .tl li{display:grid;grid-template-columns:22px 1fr auto;gap:8px;padding:5px 4px;border-radius:6px;cursor:pointer;align-items:baseline}
 .tl li:hover,.tl li.hl{background:var(--panel-2)}
-.tl .k{width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font:600 11px/18px "Barlow Condensed",sans-serif;text-align:center;align-self:start;margin-top:1px}
+.tl .k{width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font:600 11px/18px "Libre Franklin",sans-serif;text-align:center;align-self:start;margin-top:1px}
 .tl li.home .k{background:var(--ink)}
 .tl li.nogeo .k{background:var(--ink-3)}
 .tl .tn{font-weight:600}
@@ -181,14 +181,14 @@ button{font:inherit;color:inherit}
 #grip{display:none}
 /* sentence-style leaders query */
 .qsent{font-size:15px;line-height:2.05;color:var(--ink-2);margin-top:8px}
-.tok{display:inline;border:0;background:var(--panel-2);color:var(--ink);font:600 14.5px "Source Sans 3",system-ui,sans-serif;padding:2px 7px 3px;border-radius:6px;cursor:pointer;border-bottom:2px solid var(--accent);white-space:nowrap}
+.tok{display:inline;border:0;background:var(--panel-2);color:var(--ink);font:600 14.5px "Libre Franklin",system-ui,sans-serif;padding:2px 7px 3px;border-radius:6px;cursor:pointer;border-bottom:2px solid var(--accent);white-space:nowrap}
 .tok:hover{background:color-mix(in srgb,var(--accent) 12%,var(--panel-2))}
 .tok.dim{border-bottom-color:var(--line);color:var(--ink-2);font-weight:500}
 #tokmenu{position:fixed;z-index:20;min-width:190px;max-width:280px;max-height:340px;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);padding:4px}
 #tokmenu button{display:block;width:100%;text-align:left;border:0;background:none;padding:6px 9px;border-radius:5px;font-size:13px;color:var(--ink);cursor:pointer}
 #tokmenu button:hover,#tokmenu button.on{background:var(--panel-2)}
 #tokmenu button.on{font-weight:700}
-#tokmenu h4{margin:6px 9px 2px;font:600 10.5px "Source Sans 3",sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+#tokmenu h4{margin:6px 9px 2px;font:600 10.5px "Libre Franklin",sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
 .qex{font-size:12px;color:var(--ink-3);margin-top:8px}
 .qex button{border:0;background:none;padding:0;color:var(--ink-2);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px;cursor:pointer;font:inherit}
 .subtabs{display:flex;gap:4px;margin-top:10px}
@@ -205,13 +205,13 @@ button{font:inherit;color:inherit}
 #hint{position:fixed;right:16px;bottom:16px;z-index:4;font-size:12px;color:var(--ink-2);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;box-shadow:var(--shadow);max-width:340px}
 #stats{position:fixed;top:calc(64px + env(safe-area-inset-top,0px));right:64px;width:260px;max-height:calc(100% - 80px);display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);z-index:4;overflow:hidden}
 .stabs{display:flex;align-items:center;gap:2px;padding:6px 6px 0;border-bottom:1px solid var(--line)}
-.stabs button[role=tab]{border:0;background:none;padding:6px 7px 7px;font:700 12.5px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.stabs button[role=tab]{border:0;background:none;padding:6px 7px 7px;font:700 12.5px/1 "Libre Franklin","Arial Narrow",sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
 .stabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--ink)}
 #statsclose{margin-left:auto;border:0;background:none;font-size:18px;color:var(--ink-3);cursor:pointer;padding:0 6px}
 #statsbody{overflow:auto;padding:6px 8px 10px}
 .srow{display:grid;grid-template-columns:18px 1fr auto;gap:3px 6px;align-items:center;width:100%;border:0;background:none;text-align:left;padding:3px 4px;border-radius:6px;cursor:pointer}
 .srow:hover,.srow.on{background:var(--panel-2)}
-.srow .rk{font:600 12px "Barlow Condensed",sans-serif;color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
+.srow .rk{font:600 12px "Libre Franklin",sans-serif;color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
 .srow .nm{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .srow .v{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .srow .v small{color:var(--ink-3)}
@@ -224,22 +224,22 @@ button{font:inherit;color:inherit}
 .shot{width:76px;height:76px;border-radius:50%;background:linear-gradient(160deg,var(--t1),var(--t2));position:relative;overflow:hidden;display:grid;place-items:center;box-shadow:inset 0 0 0 2px var(--panel),0 0 0 2px var(--t1)}
 .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 12%;background:var(--panel-2);opacity:0}
 .shot.ok img{opacity:1}
-.shot .ini{font:700 26px/1 "Barlow Condensed","Arial Narrow",sans-serif;color:#fff;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.35)}
-.pcid h2{margin:2px 0 0;font:400 29px/1.02 "IM Fell English",Georgia,serif;color:var(--ink);text-wrap:balance}
-.pcid .pos{font:600 13px "Barlow Condensed",sans-serif;letter-spacing:.05em;color:var(--ink-3);text-transform:uppercase}
+.shot .ini{font:700 26px/1 "Libre Franklin","Arial Narrow",sans-serif;color:#fff;letter-spacing:.02em;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.pcid h2{margin:2px 0 0;font:700 23px/1.1 "Libre Baskerville",Georgia,serif;color:var(--ink);text-wrap:balance}
+.pcid .pos{font:600 13px "Libre Franklin",sans-serif;letter-spacing:.05em;color:var(--ink-3);text-transform:uppercase}
 .pcid .meta{color:var(--ink-2);font-size:12.5px;margin-top:4px}
 .hof{color:var(--ink);font-weight:700}
 .pclogo{width:40px;height:36px;object-fit:contain;align-self:start;margin-top:14px}
 #pcclose{position:absolute;top:8px;right:8px;border:0;background:none;font-size:20px;color:var(--ink-3);cursor:pointer;padding:2px 8px;border-radius:6px}
 #pcclose:hover{background:var(--panel-2);color:var(--ink)}
 .ptabs{display:flex;gap:2px;padding:0 10px;border-bottom:1px solid var(--line)}
-.ptabs button{border:0;background:none;padding:9px 10px 8px;font:700 13px/1 "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.ptabs button{border:0;background:none;padding:9px 10px 8px;font:700 13px/1 "Libre Franklin","Arial Narrow",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
 .ptabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--team,var(--ink))}
 #pcbody{flex:1;overflow:auto;padding:12px 16px 16px}
 .tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
 .tiles.g{grid-template-columns:repeat(4,1fr)}
 .tiles div{background:var(--panel-2);border-radius:8px;padding:7px 6px;text-align:center}
-.tiles b{display:block;font:600 19px/1.05 "Barlow Condensed","Arial Narrow",sans-serif}
+.tiles b{display:block;font:600 19px/1.05 "Libre Franklin","Arial Narrow",sans-serif}
 .tiles span{font-size:10.5px;color:var(--ink-3);letter-spacing:.06em}
 .arena{display:flex;align-items:center;gap:6px;margin-top:4px;color:var(--ink-3);font-size:11.5px}
 .arena svg{width:52px;height:31px;flex:none;color:var(--ink-2)}
@@ -256,13 +256,13 @@ button{font:inherit;color:inherit}
 .qform .mode{grid-column:1/-1;margin-top:0}
 .qform label{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
 .qform label.wide{grid-column:1/-1}
-.qform select{min-width:0;width:100%;font:500 13px "Source Sans 3",system-ui,sans-serif;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:5px 6px;text-transform:none}
+.qform select{min-width:0;width:100%;font:500 13px "Libre Franklin",system-ui,sans-serif;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:5px 6px;text-transform:none}
 .qform select:disabled{opacity:.45}
 .bornin{display:flex;flex-wrap:wrap;gap:4px;text-transform:none;letter-spacing:0}
 .bornin .any{font-size:12.5px;color:var(--ink-2)}
 .lrow .lbar{display:block;height:4px;background:var(--panel-2);border-radius:0 2px 2px 0;margin-top:4px;overflow:hidden}
 .lrow .lbar i{display:block;height:100%;background:var(--accent);border-radius:0 2px 2px 0}
-.lrow .lv{font:600 15px "Barlow Condensed",sans-serif;color:var(--ink)}
+.lrow .lv{font:600 15px "Libre Franklin",sans-serif;color:var(--ink)}
 .prow.on{background:var(--accent-soft)}
 .yrs{display:flex;gap:4px;align-items:center;text-transform:none}
 .yrs select{flex:1;min-width:0}
@@ -270,7 +270,7 @@ button{font:inherit;color:inherit}
 .qsug span{font-weight:600}
 #tip{position:fixed;z-index:6;pointer-events:none;max-width:280px;padding:9px 11px;display:none;font-size:12.5px;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow)}
 #tip.show{display:block}
-#tip .t{font:700 17px/1.1 "Barlow Condensed",sans-serif;text-transform:uppercase}
+#tip .t{font:700 17px/1.1 "Libre Franklin",sans-serif;text-transform:uppercase}
 #tip .s{color:var(--ink-3);font-size:12px}
 #tip ul{margin:5px 0 0;padding:0;list-style:none}
 #tip li{padding:1px 0}
@@ -283,7 +283,7 @@ button{font:inherit;color:inherit}
   #grip i{width:40px;height:5px;border-radius:3px;background:var(--line)}
   #panel .head{padding-top:4px}
   #panel .head::before{display:none}
-  .head h1{font-size:25px}
+  .head h1{font-size:22px}
   .head .sub{display:none}
   .foot{display:none}
   #mapctl{top:calc(8px + env(safe-area-inset-top,0px));right:8px}
@@ -538,7 +538,7 @@ function drawGhostLabels(span) {
   ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   for (const it of items) {
     const txt = it.upper ? it.g.text.toUpperCase() : it.g.text;
-    const fam = pir ? '"IM Fell English", Georgia, serif' : it.italic ? '"Source Sans 3", system-ui, sans-serif' : '"Barlow Condensed", "Arial Narrow", sans-serif';
+    const fam = pir ? '"Libre Baskerville", Georgia, serif' : it.italic ? '"Libre Franklin", system-ui, sans-serif' : '"Libre Franklin", "Arial Narrow", sans-serif';
     ctx.font = `${it.italic ? 'italic ' : ''}${it.upper && !pir ? 600 : 400} ${it.font}px ${fam}`;
     if (ls) ctx.letterSpacing = it.spacing + 'px';
     const w = ctx.measureText(txt).width + (ls ? 0 : it.spacing * txt.length), h = it.font + 2;
@@ -653,7 +653,7 @@ function drawCompass(x, y, r) {
       if (side === 1) ctx.fill(); else { ctx.fillStyle = C.land; ctx.fill(); ctx.stroke(); ctx.fillStyle = C['land-edge']; }
     }
   }
-  ctx.globalAlpha = 0.9; ctx.font = `400 ${Math.round(r * 0.34)}px "Pirata One", "IM Fell English", serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.globalAlpha = 0.9; ctx.font = `400 ${Math.round(r * 0.34)}px "Pirata One", "Libre Baskerville", serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText('N', 0, -r - r * 0.25); ctx.restore();
 }
 // countries: world-atlas ids are ISO numeric -> map to the ISO2 codes used for birth country
@@ -1030,7 +1030,7 @@ function drawPlayer(id, path, e, labels) {
     const s = scr(st.ll); if (!s) continue;
     const hl = list.some(x => x.i === S.hlStop);
     dotAt(s, hl ? 9 : 7.5, C.accent, C.panel, 1.8);
-    ctx.fillStyle = '#fff'; ctx.font = '600 10.5px "Barlow Condensed", "Arial Narrow", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff'; ctx.font = '600 10.5px "Libre Franklin", "Arial Narrow", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(String(list[0].n), s[0], s[1] + 0.5); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     const names = [...new Set(list.map(x => x.team))];
     labels.push({ x: s[0], y: s[1], r: 9, text: names.slice(0, 2).join(' / ') + (names.length > 2 ? ` +${names.length - 2}` : ''), sub: st.where, prio: hl ? 8000 : 6000 - k, color: C.label, weight: 600, size: 12 });
@@ -1101,7 +1101,7 @@ function badge(t, s, size, on) {
     ctx.drawImage(im, s[0] - iw * k / 2, s[1] - ih * k / 2, iw * k, ih * k);
   } else if (size >= 20) {
     const L = d3.hsl(t.p1).l; ctx.fillStyle = L > 0.62 ? '#111' : '#fff';
-    ctx.font = `700 ${Math.round(size * 0.42)}px "Barlow Condensed","Arial Narrow",sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `700 ${Math.round(size * 0.42)}px "Libre Franklin","Arial Narrow",sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(t.ab, s[0], s[1] + 0.5); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   }
 }
@@ -1148,9 +1148,9 @@ function placeLabels(labels) {
   // keep labels out from under the floating panel and controls
   const occ = ['#panel', '#mapctl', '#hint', '#stats'].map(q => { const el = $(q); if (!el || getComputedStyle(el).display === 'none') return null; const r = el.getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom]; }).filter(Boolean).concat(occupyOnly);
   for (const L of labels) {
-    const font = pirateOn() ? `${L.size ? L.size + 1.5 : 13.5}px "IM Fell English", Georgia, serif` : `${L.weight || 400} ${L.size || 12}px ${L.cond ? '"Barlow Condensed","Arial Narrow",' : '"Source Sans 3",'} system-ui, sans-serif`;
+    const font = pirateOn() ? `${L.size ? L.size + 1.5 : 13.5}px "Libre Baskerville", Georgia, serif` : `${L.weight || 400} ${L.size || 12}px ${L.cond ? '"Libre Franklin","Arial Narrow",' : '"Libre Franklin",'} system-ui, sans-serif`;
     ctx.font = font; let w = ctx.measureText(L.text).width;
-    const subFont = '400 11px "Source Sans 3", system-ui, sans-serif';
+    const subFont = '400 11px "Libre Franklin", system-ui, sans-serif';
     if (L.sub) { ctx.font = subFont; w = Math.max(w, ctx.measureText(L.sub).width); }
     const h = L.sub ? 27 : (L.size || 12) + 3;
     const cands = [[L.x + L.r + 4, L.y - h / 2], [L.x - L.r - 4 - w, L.y - h / 2], [L.x - w / 2, L.y - L.r - 3 - h], [L.x - w / 2, L.y + L.r + 3]];

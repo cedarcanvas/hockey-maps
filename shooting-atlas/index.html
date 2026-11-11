@@ -7,117 +7,117 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2028%2032%22%3E%3Cpath%20d%3D%22M2%2012h3M23%2012h3M2%2022h3.6M22.4%2022h3.6%22%20stroke%3D%22%231b2a35%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20fill-rule%3D%22evenodd%22%20fill%3D%22%23f4f1ea%22%20stroke%3D%22%231b2a35%22%20stroke-width%3D%221.2%22%20d%3D%22M14%201.5C8.2%201.5%205%206.6%205%2014c0%208.6%203.9%2016.5%209%2016.5s9-7.9%209-16.5c0-7.4-3.2-12.5-9-12.5ZM8.4%2013.2c1.4-1.3%203.4-1.4%204.4-.2-.6%201.7-2.8%202.4-4.4.2Zm11.2%200c-1.4-1.3-3.4-1.4-4.4-.2.6%201.7%202.8%202.4%204.4.2ZM10.9%205.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8Zm3.1-.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8Zm3.1.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8ZM12.4%2017.6h3.2v1.2h-3.2ZM11.4%2021.4h1.2v4.2h-1.2Zm2%200h1.2v4.6h-1.2Zm2%200h1.2v4.2h-1.2Z%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* ---------- Theme tokens ----------
      Light theme by default (in :root); body.dark flips the variables.
      SVG marking colors are JS-set (read at draw time via getComputedStyle),
      so the dark/light flip propagates everywhere with one class swap. */
   :root {
-    --bg-page:       #ebebea;
-    --bg-card:       #fcfcfb;
-    --bg-ice:        #fbfbfa;
-    --bg-input:      #f0f0ee;
-    --bg-row-hover:  #f0f0ee;
-    --bg-empty-hex:  #e2e2e0;
-    --bg-button:     #f0f0ee;
-    --bg-button-hov: #e6e6e4;
-    --bg-callout:    rgba(214,57,46,0.07);
-    --bg-code:       #f0f0ee;
-    --bg-badge-info: rgba(214,57,46,0.14);
-    --bg-badge-lock: rgba(214,57,46,0.14);
+    --bg-page:       #f6f3ed;
+    --bg-card:       #ffffff;
+    --bg-ice:        #fbf9f5;
+    --bg-input:      #efe9dd;
+    --bg-row-hover:  #efe9dd;
+    --bg-empty-hex:  #e4ddd0;
+    --bg-button:     #efe9dd;
+    --bg-button-hov: #e6dfd2;
+    --bg-callout:    rgba(194,83,31,0.07);
+    --bg-code:       #efe9dd;
+    --bg-badge-info: rgba(194,83,31,0.14);
+    --bg-badge-lock: rgba(194,83,31,0.14);
 
-    --fg-primary:    #1b1b1b;
-    --fg-secondary:  #555553;
-    --fg-muted:      #8a8a87;
-    --fg-accent:     #d6392e;
-    --fg-link:       #1b1b1b;
-    --fg-pin:        #d6392e;
-    --fg-badge-info: #d6392e;
-    --fg-badge-lock: #d6392e;
+    --fg-primary:    #2b2724;
+    --fg-secondary:  #5b5348;
+    --fg-muted:      #857a6c;
+    --fg-accent:     #c2531f;
+    --fg-link:       #2b2724;
+    --fg-pin:        #c2531f;
+    --fg-badge-info: #c2531f;
+    --fg-badge-lock: #c2531f;
 
-    --border-light:  #dededb;
-    --border-medium: #c6c6c3;
-    --border-callout:rgba(214,57,46,0.45);
-    --border-row:    #dededb;
+    --border-light:  #ddd6c9;
+    --border-medium: #c9bfae;
+    --border-callout:rgba(194,83,31,0.45);
+    --border-row:    #ddd6c9;
 
-    --hex-seam:                #fcfcfb;
-    --hex-hover-stroke:        #1b1b1b;
+    --hex-seam:                #ffffff;
+    --hex-hover-stroke:        #2b2724;
     --hex-locked-stroke:       rgba(27,27,27,0.35);
-    --hex-locked-origin:       #1b1b1b;
+    --hex-locked-origin:       #2b2724;
     --hex-locked-glow:         rgba(0,0,0,0.35);
     --hex-locked-dim-opacity:  0.42;
     --hex-fill-opacity:        0.78;
 
     --badge-stroke:            rgba(31,35,40,0.45);
-    --goal-fill:               #1b1b1b;
+    --goal-fill:               #2b2724;
     --goal-halo:               rgba(251,251,250,0.92);
 
     --shadow-card:    0 10px 30px rgba(0,0,0,0.12);
     --shadow-tooltip: 0 10px 30px rgba(0,0,0,0.14);
     --shadow-results: 0 10px 30px rgba(0,0,0,0.14);
-    --shadow-focus:   0 0 0 2px #1b1b1b;
+    --shadow-focus:   0 0 0 2px #2b2724;
 
     --rink-red:           #c8102e;
     --rink-blue:          #0033a0;
-    --rink-boards:        #555553;
+    --rink-boards:        #5b5348;
     --rink-net-bg:        rgba(255,255,255,0.85);
-    --rink-mesh:          #8a8a87;
+    --rink-mesh:          #857a6c;
     --marking-halo:       rgba(0,0,0,0.22);
     --marking-halo-blur:  0.9;
     --search-icon-stroke: %238a8a87;
   }
 
   body.dark {
-    --bg-page:       #0c0c0c;
-    --bg-card:       #161616;
-    --bg-ice:        #1e1e1e;
-    --bg-input:      #1f1f1f;
-    --bg-row-hover:  #1f1f1f;
-    --bg-empty-hex:  #262626;
-    --bg-button:     #1f1f1f;
-    --bg-button-hov: #2b2b2b;
-    --bg-callout:    rgba(255,106,92,0.10);
-    --bg-code:       #1f1f1f;
-    --bg-badge-info: rgba(255,106,92,0.18);
-    --bg-badge-lock: rgba(255,106,92,0.18);
+    --bg-page:       #16130f;
+    --bg-card:       #201c17;
+    --bg-ice:        #241f19;
+    --bg-input:      #2a241d;
+    --bg-row-hover:  #2a241d;
+    --bg-empty-hex:  #2e2822;
+    --bg-button:     #2a241d;
+    --bg-button-hov: #3a332b;
+    --bg-callout:    rgba(240,138,75,0.10);
+    --bg-code:       #2a241d;
+    --bg-badge-info: rgba(240,138,75,0.18);
+    --bg-badge-lock: rgba(240,138,75,0.18);
 
-    --fg-primary:    #ececec;
-    --fg-secondary:  #a9a9a9;
-    --fg-muted:      #767676;
-    --fg-accent:     #ff6a5c;
-    --fg-link:       #ececec;
-    --fg-pin:        #ff6a5c;
-    --fg-badge-info: #ff6a5c;
-    --fg-badge-lock: #ff6a5c;
+    --fg-primary:    #f1ece4;
+    --fg-secondary:  #b7ad9f;
+    --fg-muted:      #908676;
+    --fg-accent:     #f08a4b;
+    --fg-link:       #f1ece4;
+    --fg-pin:        #f08a4b;
+    --fg-badge-info: #f08a4b;
+    --fg-badge-lock: #f08a4b;
 
-    --border-light:  #2b2b2b;
-    --border-medium: #464646;
-    --border-callout:rgba(255,106,92,0.45);
-    --border-row:    #2b2b2b;
+    --border-light:  #3a332b;
+    --border-medium: #4d443a;
+    --border-callout:rgba(240,138,75,0.45);
+    --border-row:    #3a332b;
 
-    --hex-seam:                #161616;
-    --hex-hover-stroke:        #ececec;
+    --hex-seam:                #201c17;
+    --hex-hover-stroke:        #f1ece4;
     --hex-locked-stroke:       rgba(236,236,236,0.35);
-    --hex-locked-origin:       #ececec;
+    --hex-locked-origin:       #f1ece4;
     --hex-locked-glow:         rgba(255,255,255,0.4);
     --hex-locked-dim-opacity:  0.55;
     --hex-fill-opacity:        0.68;
 
     --badge-stroke:            rgba(255,255,255,0.55);
-    --goal-fill:               #ececec;
+    --goal-fill:               #f1ece4;
     --goal-halo:               rgba(22,22,22,0.9);
 
     --shadow-card:    0 10px 30px rgba(0,0,0,0.55);
     --shadow-tooltip: 0 10px 30px rgba(0,0,0,0.55);
     --shadow-results: 0 10px 30px rgba(0,0,0,0.55);
-    --shadow-focus:   0 0 0 2px #ececec;
+    --shadow-focus:   0 0 0 2px #f1ece4;
 
     --rink-red:           #ff3030;
     --rink-blue:          #3da4ff;
-    --rink-boards:        #8a8a87;
+    --rink-boards:        #857a6c;
     --rink-net-bg:        rgba(22,22,22,0.92);
-    --rink-mesh:          #767676;
+    --rink-mesh:          #908676;
     --marking-halo:       rgba(0,0,0,0.85);
     --marking-halo-blur:  1.4;
     --search-icon-stroke: %23767676;
@@ -211,7 +211,7 @@
     font-variant-numeric: tabular-nums;
   }
   .career-panel .cp-stats .dim { color: var(--fg-muted); }
-  .career-panel .cp-team { font: 600 12.5px/1 "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .03em; color: var(--fg-primary); }
+  .career-panel .cp-team { font: 600 12.5px/1 "Libre Franklin", "Arial Narrow", sans-serif; letter-spacing: .03em; color: var(--fg-primary); }
   .career-panel .cp-totals {
     margin-top: 10px; padding-top: 8px;
     border-top: 1px dashed var(--border-row);
@@ -501,16 +501,16 @@
   }
   .zone-panel .zp-row:hover { background: var(--bg-button-hov); }
   .zone-panel .zp-row.on { background: var(--bg-callout); border-left-color: var(--fg-accent); }
-  .zone-panel .zp-rk { font: 600 13px/1 "Barlow Condensed", "Arial Narrow", sans-serif; color: var(--fg-muted); text-align: right; }
+  .zone-panel .zp-rk { font: 600 13px/1 "Libre Franklin", "Arial Narrow", sans-serif; color: var(--fg-muted); text-align: right; }
   .zone-panel .zp-nm { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .zone-panel .zp-nm .team-chip { font: 700 10px/1 "Barlow Condensed", sans-serif; padding: 2px 4px; border-radius: 3px; margin-left: 5px; letter-spacing: .04em; vertical-align: 1px; }
-  .zone-panel .zp-sh { font: 600 17px/1 "Barlow Condensed", "Arial Narrow", sans-serif; color: var(--fg-accent); font-variant-numeric: tabular-nums; }
+  .zone-panel .zp-nm .team-chip { font: 700 10px/1 "Libre Franklin", sans-serif; padding: 2px 4px; border-radius: 3px; margin-left: 5px; letter-spacing: .04em; vertical-align: 1px; }
+  .zone-panel .zp-sh { font: 600 17px/1 "Libre Franklin", "Arial Narrow", sans-serif; color: var(--fg-accent); font-variant-numeric: tabular-nums; }
   .zone-panel .zp-sub { grid-column: 2 / -1; display: flex; justify-content: space-between; gap: 8px;
     font-size: 11.5px; color: var(--fg-secondary); font-variant-numeric: tabular-nums; }
   .zone-panel .zp-bar { grid-column: 2 / -1; height: 4px; background: var(--border-row); border-radius: 2px; overflow: hidden; }
   .zone-panel .zp-bar i { display: block; height: 100%; background: var(--fg-accent); border-radius: 2px; }
   .zone-panel .zp-note { font-size: 11.5px; color: var(--fg-muted); margin-top: 8px; line-height: 1.45; }
-  .zone-panel .zp-clear { float: right; font: 500 12px "Source Sans 3", sans-serif; border: 1px solid var(--border-light);
+  .zone-panel .zp-clear { float: right; font: 500 12px "Libre Franklin", sans-serif; border: 1px solid var(--border-light);
     background: var(--bg-button); color: var(--fg-secondary); border-radius: 6px; padding: 2px 8px; cursor: pointer; }
 
   /* Tooltip — compact bio + hex stats, follows the cursor */
@@ -614,12 +614,12 @@
 
   /* =====================================================================
    * Ridgeline Maps house style — matched to "Where the NHL Grew Up".
-   * Source Sans 3 body · IM Fell English titles · Barlow Condensed numerals
+   * Ridgeline Maps house style: Libre Franklin body and numerals · Libre Baskerville titles
    * and labels · warm neutral grays · single red accent · 12px panels.
    * ===================================================================== */
-  body { font: 14px/1.4 "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  body { font: 14px/1.4 "Libre Franklin", system-ui, -apple-system, "Segoe UI", sans-serif; }
   button, input, select { font-family: inherit; }
-  header h1 { font: 400 34px/1.04 "IM Fell English", Georgia, serif; letter-spacing: 0; margin-bottom: 4px; }
+  header h1 { font: 700 28px/1.1 "Libre Baskerville", Georgia, serif; letter-spacing: -0.01em; margin-bottom: 4px; }
   header p.subtitle { color: var(--fg-muted); font-size: 13.5px; }
   header p.subtitle .hint { color: var(--fg-secondary); }
 
@@ -635,28 +635,32 @@
   #tooltip { border-radius: 10px; border-color: var(--border-light); padding-top: 14px; overflow: hidden; }
 
   /* Titles */
-  #tooltip .name { font: 400 22px/1.05 "IM Fell English", Georgia, serif; }
+  #tooltip .name { font: 400 22px/1.05 "Libre Baskerville", Georgia, serif; }
   #tooltip .name .jersey, #tooltip .meta, .career-panel .cp-season,
   .career-panel .cp-stats, #lock-bar .player-line .dim {
     font-variant-numeric: tabular-nums;
   }
-  #tooltip .name .jersey { font: 600 14px/1 "Barlow Condensed", "Arial Narrow", sans-serif; color: var(--fg-muted); }
-  .career-panel .cp-head { font: 400 22px/1.05 "IM Fell English", Georgia, serif; border-bottom-color: var(--border-light); padding-top: 4px; }
-  .career-panel .cp-sub { font-family: "Source Sans 3", sans-serif; font-size: 12.5px; color: var(--fg-muted); margin-top: 4px; }
-  #lock-bar .player-line .who { font: 400 19px/1.05 "IM Fell English", Georgia, serif; }
+  #tooltip .name .jersey { font: 600 14px/1 "Libre Franklin", "Arial Narrow", sans-serif; color: var(--fg-muted); }
+  .career-panel .cp-head { font: 400 22px/1.05 "Libre Baskerville", Georgia, serif; border-bottom-color: var(--border-light); padding-top: 4px; }
+  .career-panel .cp-sub { font-family: "Libre Franklin", sans-serif; font-size: 12.5px; color: var(--fg-muted); margin-top: 4px; }
+  #lock-bar .player-line .who { font: 400 19px/1.05 "Libre Baskerville", Georgia, serif; }
 
-  /* Numerals + small-caps labels in Barlow Condensed */
-  #tooltip .sh-big { font: 600 34px/1 "Barlow Condensed", "Arial Narrow", sans-serif; color: var(--fg-accent); }
-  .career-panel .cp-season { font: 600 15px/1 "Barlow Condensed", "Arial Narrow", sans-serif; }
+  /* Numerals + small-caps labels in Libre Franklin */
+  #tooltip .sh-big { font: 600 34px/1 "Libre Franklin", "Arial Narrow", sans-serif; color: var(--fg-accent); }
+  .career-panel .cp-season { font: 600 15px/1 "Libre Franklin", "Arial Narrow", sans-serif; }
   .career-panel .cp-bar-fill { background: var(--fg-accent); }
   .career-panel .cp-row.active { background: var(--bg-callout); border-left-color: var(--fg-accent); }
   .biv-legend .y-tick, .biv-legend .x-tick, .biv-legend .y-axis-label, .biv-legend .x-axis-label {
-    font-family: "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .03em;
+    font-family: "Libre Franklin", "Arial Narrow", sans-serif; letter-spacing: .03em;
   }
   .biv-legend .y-axis-label, .biv-legend .x-axis-label { text-transform: uppercase; font-weight: 700; color: var(--fg-muted); }
-  .stats-line strong { font: 600 15px/1 "Barlow Condensed", "Arial Narrow", sans-serif; }
-  .goal-label { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-weight: 700; }
-  .badge { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; letter-spacing: .05em; }
+  /* Libre Franklin is wider than the old condensed face: larger key cells so each Sh% tick fits under its column. */
+  .biv-legend { grid-template-columns: auto auto repeat(3, 38px); grid-template-rows: repeat(3, 34px) auto auto; }
+  .biv-legend .biv-cell { width: 38px; height: 34px; }
+  .biv-legend .x-tick { letter-spacing: 0; white-space: nowrap; }
+  .stats-line strong { font: 600 15px/1 "Libre Franklin", "Arial Narrow", sans-serif; }
+  .goal-label { font-family: "Libre Franklin", "Arial Narrow", sans-serif; font-weight: 700; }
+  .badge { font-family: "Libre Franklin", "Arial Narrow", sans-serif; letter-spacing: .05em; }
 
   /* Segmented controls like the reference's .layer / .seg */
   .sit-toggle { background: var(--bg-button); border-color: var(--border-light); border-radius: 8px; }
