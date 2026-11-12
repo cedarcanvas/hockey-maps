@@ -19,46 +19,46 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}.foot a{color:inherit}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* Layout: one column. Header, season strip (the main filter), then the chart card with its toolbar and legend, then the player list.
-   Colors and type follow Where the NHL Grew Up: blue-gray chrome, IM Fell English headings, Source Sans 3 body, Barlow Condensed figures. */
+   Colors and type follow the Ridgeline Maps house style, as on Where the NHL Grew Up: warm paper and ink with a coral accent, Libre Baskerville headings, Libre Franklin body and figures. */
 :root{
   color-scheme: light;
-  --bg:#e9eef1; --panel:#fbfcfc; --panel-2:#eef2f4; --ink:#14212b; --ink-2:#4b5a66; --ink-3:#83909a;
-  --line:#d9e0e5; --grid:#e6ebee; --ref:#9fb0bc; --accent:#d6392e; --accent-soft:rgba(214,57,46,.12);
-  --bar:#c9d3da; --bar-on:#3e4d59; --bar-pre:#8d9aa4;
-  --ghost:rgba(20,33,43,.075); --ring:#14212b; --halo:rgba(251,252,252,.92);
-  --c-0:#2a78d6; --c-1:#eb6834; --c-2:#1baf7a; --c-3:#83909a;
+  --bg:#f6f3ed; --panel:#ffffff; --panel-2:#efe9dd; --ink:#2b2724; --ink-2:#5b5348; --ink-3:#857a6c;
+  --line:#ddd6c9; --grid:#ebe5da; --ref:#b3a898; --accent:#c2531f; --accent-soft:rgba(194,83,31,.12);
+  --bar:#d8d0c3; --bar-on:#3d3631; --bar-pre:#9c9284;
+  --ghost:rgba(20,33,43,.075); --ring:#2b2724; --halo:rgba(251,252,252,.92);
+  --c-0:#2a78d6; --c-1:#eb6834; --c-2:#1baf7a; --c-3:#857a6c;
   --seq-a:#86b6ef; --seq-b:#0d366b;
-  --ocean:#d3e0e8; --ocean-edge:#b3c6d2; --land:#fafbfb; --land-edge:#b9c3c9; --border-c:#aab6be; --grat:rgba(40,80,110,.10); --gdot:#5d6d79;
-  --shadow:0 10px 30px rgba(18,33,43,.14);
-  --f-display:"IM Fell English",Georgia,serif;
-  --f-body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-fig:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --ocean:#d3e0e8; --ocean-edge:#b3c6d2; --land:#fbf9f5; --land-edge:#c9bfae; --border-c:#bdb2a2; --grat:rgba(40,80,110,.10); --gdot:#6b6155;
+  --shadow:0 10px 30px rgba(43,39,36,.14);
+  --f-display:"Libre Baskerville",Georgia,serif;
+  --f-body:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-fig:"Libre Franklin","Arial Narrow",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme: dark;
-    --bg:#0a1016; --panel:#111a21; --panel-2:#17222b; --ink:#e7edf1; --ink-2:#a4b1ba; --ink-3:#6f7d87;
-    --line:#24313b; --grid:#1a252e; --ref:#4a5c69; --accent:#ff6a5c; --accent-soft:rgba(255,106,92,.16);
-    --bar:#2c3a45; --bar-on:#e7edf1; --bar-pre:#8d9ca6;
-    --ghost:rgba(231,237,241,.07); --ring:#e7edf1; --halo:rgba(17,26,33,.9);
+    --bg:#16130f; --panel:#201c17; --panel-2:#2a241d; --ink:#f1ece4; --ink-2:#b7ad9f; --ink-3:#908676;
+    --line:#3a332b; --grid:#2a241d; --ref:#5e5448; --accent:#f08a4b; --accent-soft:rgba(240,138,75,.16);
+    --bar:#3a332b; --bar-on:#f1ece4; --bar-pre:#9c9284;
+    --ghost:rgba(231,237,241,.07); --ring:#f1ece4; --halo:rgba(32,28,23,.9);
     --c-0:#3987e5; --c-1:#d95926; --c-2:#199e70; --c-3:#7f8d97;
     --seq-a:#184f95; --seq-b:#cde2fb;
-    --ocean:#0c1620; --ocean-edge:#1f3242; --land:#19242d; --land-edge:#394955; --border-c:#46586a; --grat:rgba(140,180,210,.07); --gdot:#8d9ca6;
+    --ocean:#0c1620; --ocean-edge:#1f3242; --land:#2c2620; --land-edge:#4d443a; --border-c:#5e5448; --grat:rgba(140,180,210,.07); --gdot:#9c9284;
     --shadow:0 10px 30px rgba(0,0,0,.5);
   }
 }
 :root[data-theme="dark"]{
   color-scheme: dark;
-  --bg:#0a1016; --panel:#111a21; --panel-2:#17222b; --ink:#e7edf1; --ink-2:#a4b1ba; --ink-3:#6f7d87;
-  --line:#24313b; --grid:#1a252e; --ref:#4a5c69; --accent:#ff6a5c; --accent-soft:rgba(255,106,92,.16);
-  --bar:#2c3a45; --bar-on:#e7edf1; --bar-pre:#8d9ca6;
-  --ghost:rgba(231,237,241,.07); --ring:#e7edf1; --halo:rgba(17,26,33,.9);
+  --bg:#16130f; --panel:#201c17; --panel-2:#2a241d; --ink:#f1ece4; --ink-2:#b7ad9f; --ink-3:#908676;
+  --line:#3a332b; --grid:#2a241d; --ref:#5e5448; --accent:#f08a4b; --accent-soft:rgba(240,138,75,.16);
+  --bar:#3a332b; --bar-on:#f1ece4; --bar-pre:#9c9284;
+  --ghost:rgba(231,237,241,.07); --ring:#f1ece4; --halo:rgba(32,28,23,.9);
   --c-0:#3987e5; --c-1:#d95926; --c-2:#199e70; --c-3:#7f8d97;
   --seq-a:#184f95; --seq-b:#cde2fb;
-    --ocean:#0c1620; --ocean-edge:#1f3242; --land:#19242d; --land-edge:#394955; --border-c:#46586a; --grat:rgba(140,180,210,.07); --gdot:#8d9ca6;
+    --ocean:#0c1620; --ocean-edge:#1f3242; --land:#2c2620; --land-edge:#4d443a; --border-c:#5e5448; --grat:rgba(140,180,210,.07); --gdot:#9c9284;
   --shadow:0 10px 30px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box}
@@ -68,12 +68,12 @@ button,input,select{font:inherit;color:inherit}
 .num{font-variant-numeric:tabular-nums}
 .wrap{max-width:1240px;margin:0 auto;padding-inline:24px;padding-block:22px 28px;display:flex;flex-direction:column;gap:14px}
 header{display:flex;flex-direction:column;gap:6px}
-h1{margin:0;font:400 42px/1.02 var(--f-display);letter-spacing:0;text-wrap:balance}
+h1{margin:0;font:700 36px/1.08 var(--f-display);letter-spacing:-.01em;text-wrap:balance}
 .lede{margin:0;color:var(--ink-2);max-width:72ch}
 .summary{margin:2px 0 0;font-size:16.5px;max-width:80ch;min-height:2.9em}
 .summary b{font-weight:700}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(18,33,43,.05)}
-.eyebrow{font:700 12.5px/1 var(--f-fig);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(43,39,36,.05)}
+.eyebrow{font:700 12px/1.3 var(--f-fig);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 
 /* Season strip */
 #seasons{padding:12px 16px 12px;display:flex;flex-direction:column;gap:8px}
@@ -181,7 +181,7 @@ td .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right
 
 @media (max-width:700px){
   .wrap{padding-inline:16px;padding-block:16px 24px}
-  h1{font-size:33px}
+  h1{font-size:28px}
   .summary{font-size:15.5px}
   .plot{height:clamp(380px,60vh,520px)}
   .find{flex:1 1 100%}
@@ -344,7 +344,7 @@ let xDom = null, xAnim = null;
 
 // ---------- helpers ----------
 const tokCache = {};
-const FB = '"Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif';
+const FB = '"Libre Franklin", system-ui, -apple-system, "Segoe UI", sans-serif';
 function tok(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
 function readTokens() { for (const n of ['--ink','--ink-2','--ink-3','--grid','--ref','--ghost','--ring','--halo','--panel','--accent','--c-0','--c-1','--c-2','--c-3','--seq-a','--seq-b','--line','--ocean','--ocean-edge','--land','--land-edge','--border-c','--grat','--gdot']) tokCache[n] = tok(n); }
 function latStr(l) { return Math.abs(l).toFixed(1) + '°' + (l >= 0 ? 'N' : 'S'); }
@@ -778,7 +778,7 @@ function drawGrid(f, o) {
     ctx.setLineDash([4, 4]); ctx.strokeStyle = T['--ref']; hline(f.L, y, f.R); ctx.setLineDash([]);
     if (o.refLabels) {
       ctx.fillStyle = T['--ink-3']; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-      ctx.font = `italic 400 ${o.small ? 12 : 13}px "IM Fell English", Georgia, serif`;
+      ctx.font = `italic 400 ${o.small ? 12 : 13}px "Libre Baskerville", Georgia, serif`;
       ctx.strokeStyle = T['--halo']; ctx.lineWidth = 3; ctx.lineJoin = 'round';
       ctx.strokeText(lab, f.L + 5, y - 2); ctx.fillText(lab, f.L + 5, y - 2); ctx.lineWidth = 1;
     }
@@ -959,7 +959,7 @@ function draw(fast) {
       const mem = byPanel[i];
       const med = mem.length ? d3.median(mem, k => P[k].lat) : null;
       ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-      ctx.fillStyle = T['--ink']; ctx.font = `700 15px ${'"Barlow Condensed", "Arial Narrow", sans-serif'}`;
+      ctx.fillStyle = T['--ink']; ctx.font = `700 15px ${'"Libre Franklin", "Arial Narrow", sans-serif'}`;
       const name = p.name.toUpperCase();
       ctx.fillText(name, f.L, top - 7);
       const nw = ctx.measureText(name + '  ').width;
@@ -1369,7 +1369,7 @@ new MutationObserver(retheme).observe(document.documentElement, {attributes: tru
 // canvas text doesn't trigger web-font loading, so ask for the faces it uses, then redraw
 if (document.fonts) {
   try {
-    Promise.all(['700 15px "Barlow Condensed"', 'italic 400 13px "IM Fell English"', '500 12px "Source Sans 3"', '600 12px "Source Sans 3"']
+    Promise.all(['700 15px "Libre Franklin"', 'italic 400 13px "Libre Baskerville"', '500 12px "Libre Franklin"', '600 12px "Libre Franklin"']
       .map(f => document.fonts.load(f))).then(() => draw(), () => {});
   } catch (e) {}
   document.fonts.ready.then(() => draw());
