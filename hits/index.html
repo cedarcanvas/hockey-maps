@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where the Hits Land · Hockey Maps · Ridgeline Maps</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2028%2032%22%3E%3Cpath%20d%3D%22M2%2012h3M23%2012h3M2%2022h3.6M22.4%2022h3.6%22%20stroke%3D%22%231b2a35%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20fill-rule%3D%22evenodd%22%20fill%3D%22%23f4f1ea%22%20stroke%3D%22%231b2a35%22%20stroke-width%3D%221.2%22%20d%3D%22M14%201.5C8.2%201.5%205%206.6%205%2014c0%208.6%203.9%2016.5%209%2016.5s9-7.9%209-16.5c0-7.4-3.2-12.5-9-12.5ZM8.4%2013.2c1.4-1.3%203.4-1.4%204.4-.2-.6%201.7-2.8%202.4-4.4.2Zm11.2%200c-1.4-1.3-3.4-1.4-4.4-.2.6%201.7%202.8%202.4%204.4.2ZM10.9%205.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8Zm3.1-.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8Zm3.1.6a.9.9%200%201%200%200%201.8.9.9%200%200%200%200-1.8ZM12.4%2017.6h3.2v1.2h-3.2ZM11.4%2021.4h1.2v4.2h-1.2Zm2%200h1.2v4.6h-1.2Zm2%200h1.2v4.2h-1.2Z%22/%3E%3C/svg%3E">
+<meta name="description" content="All 53,658 hits of the 2025-26 NHL regular season on one rink. Zoom in, filter by team or period, and hover for hit counts along the boards.">
+<link rel="canonical" href="https://hockey.ridgelinemaps.com/hits/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Where the Hits Land · Ridgeline Maps">
+<meta property="og:description" content="Every hit of the 2025-26 NHL regular season on one rink. 88% land within 6 feet of the boards.">
+<meta property="og:url" content="https://hockey.ridgelinemaps.com/hits/">
+<meta property="og:image" content="https://hockey.ridgelinemaps.com/img/hits.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f3ed;--card:#ffffff;--ink:#2b2724;--ink-2:#5b5348;--ink-3:#857a6c;--line:#ddd6c9;--accent:#c2531f}
+@media (prefers-color-scheme:dark){:root{--bg:#16130f;--card:#201c17;--ink:#f1ece4;--ink-2:#b7ad9f;--ink-3:#908676;--line:#3a332b;--accent:#f08a4b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Libre Franklin",system-ui,sans-serif}
+main{max-width:1180px;margin:0 auto;padding:28px 16px 24px}
+.kicker{font:600 12px/1.3 "Libre Franklin",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+h1{font:700 34px/1.08 "Libre Baskerville",Georgia,serif;margin:0 0 8px}
+.lede{font:italic 16px/1.5 "Libre Baskerville",Georgia,serif;max-width:760px;margin:0 0 16px;color:var(--ink-2)}
+.controls{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:0 0 10px;font-size:14px}
+.controls label{display:inline-flex;gap:6px;align-items:center;color:var(--ink-2)}
+.controls select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:5px;padding:5px 8px}
+.controls .sw{display:inline-block;width:10px;height:10px;border-radius:50%}
+.controls button{font:600 13px "Libre Franklin",sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:5px;padding:6px 10px;cursor:pointer}
+.controls button:hover{border-color:var(--accent)}
+.controls .grp{display:flex;gap:12px;align-items:center}
+.mapwrap{position:relative;height:min(64vh,640px);min-height:380px;background:#101a24;border-radius:6px;overflow:hidden;border:1px solid var(--line);touch-action:none}
+canvas{display:block;width:100%;height:100%;cursor:grab}
+canvas.drag{cursor:grabbing}
+.zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.zoom button{width:34px;height:34px;border-radius:5px;border:1px solid #3b4b5c;background:#16222eee;color:#f1ece4;font:600 18px "Libre Franklin",sans-serif;cursor:pointer}
+.zoom button:hover{border-color:#f0a24b}
+.scale{position:absolute;left:12px;bottom:10px;color:#e7e1d6;font:500 11px "Libre Franklin",sans-serif;pointer-events:none}
+.scale div{margin-top:4px;white-space:nowrap}
+.scale i{display:inline-block;height:6px;border:1.5px solid #e7e1d6;border-top:none;vertical-align:middle;margin-right:6px}
+.legend{position:absolute;left:12px;top:10px;color:#e7e1d6;font:500 11px "Libre Franklin",sans-serif;pointer-events:none;line-height:1.7;text-shadow:0 1px 2px #000}
+.legend b{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tip{position:absolute;pointer-events:none;background:#0c141cf2;color:#f1ece4;border:1px solid #3b4b5c;border-radius:6px;padding:8px 10px;font:500 12.5px/1.4 "Libre Franklin",sans-serif;max-width:230px;display:none;z-index:3}
+.tip b{font-weight:700;color:#f0a24b}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.stat .n{font:700 22px/1.1 "Libre Baskerville",Georgia,serif}
+.stat .l{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.notes{font-size:13.5px;color:var(--ink-2);margin:14px 0 0;max-width:900px}
+.notes p{margin:0 0 8px}
+footer{max-width:1180px;margin:0 auto;padding:0 16px 36px;color:var(--ink-3);font-size:13px}
+footer a{color:inherit}
+@media (max-width:700px){.controls select{max-width:150px}.controls{font-size:13px}h1{font-size:26px}.mapwrap{height:72vh}}
+.rm-bar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;align-items:center;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:#2b2724;color:#f6f3ed;font:500 13px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif}
+.rm-bar a{color:#f6f3ed;text-decoration:none}
+.rm-bar a:hover,.rm-bar a:focus-visible{text-decoration:underline}
+.rm-bar nav{display:flex;flex-wrap:wrap;gap:4px 16px}
+@media (prefers-color-scheme:dark){.rm-bar{background:#0d0b09}}
+</style>
+</head>
+<body>
+<div class="rm-bar"><a href="https://maps.ridgelinemaps.com/">&larr; All interactive maps</a><nav aria-label="Ridgeline Maps"><a href="https://ridgelinemaps.com/store">Shop map prints</a><a href="https://ridgelinemaps.com/custom-maps">Custom maps</a><a href="https://ridgelinemaps.com">ridgelinemaps.com</a></nav></div>
+<main>
+<p class="kicker">Ridgeline Maps &middot; #30DayMapChallenge Day 13 &middot; Interactions</p>
+<h1>Where the Hits Land</h1>
+<p class="lede">Every hit of the 2025-26 NHL regular season, drawn from the hitter's side so each team attacks left to right. Zoom, filter, and hover.</p>
+<div class="controls">
+<label>Team <select id="fTeam"></select></label>
+<label>Period <select id="fPer"><option value="-1">All</option><option value="0">1st</option><option value="1">2nd</option><option value="2">3rd</option><option value="3">Overtime</option></select></label>
+<label>Venue <select id="fHome"><option value="-1">Home + road</option><option value="1">Hitter at home</option><option value="0">Hitter on the road</option></select></label>
+<div class="grp">
+<label><input type="checkbox" id="lPts" checked> <span class="sw" style="background:#f0a24b"></span>Hits</label>
+<label><input type="checkbox" id="lHeat" checked> Density glow</label>
+<label><input type="checkbox" id="lRing" checked> Boards bars</label>
+</div>
+</div>
+<div class="mapwrap" id="wrap">
+<canvas id="cv" aria-label="Interactive map of NHL hits on a hockey rink"></canvas>
+<div class="legend"><span><b style="background:#e8734a"></b>Offensive zone</span><br><span><b style="background:#e5c04a"></b>Neutral zone</span><br><span><b style="background:#4aa8e8"></b>Defensive zone</span></div>
+<div class="zoom"><button id="zi" aria-label="Zoom in">+</button><button id="zo" aria-label="Zoom out">&minus;</button><button id="zr" aria-label="Reset view" style="font-size:13px">&#8634;</button></div>
+<div class="scale" id="scale"></div>
+<div class="tip" id="tip"></div>
+</div>
+<div class="stats" id="stats"></div>
+<div class="notes">
+<p>Hover the rink to count hits within 10 ft (3 m) of that spot (circle area 314 sq ft, 29 m&sup2;), next to the rink-wide average per 100 sq ft. Hover the bars outside the boards for hits per foot of wall. Bars count hits within 6 ft (1.8 m) of the boards, in 2 ft (0.6 m) slices of wall, and are scaled to the current selection.</p>
+<p>Method: every regular-season game from the NHL's public play-by-play feed, keeping events logged as hits. Each hit is flipped so the hitter attacks to the right, and points are nudged up to half a foot so they don't stack on a grid. The glow is hit density smoothed over about 2.4 ft (0.7 m). Positions are where the NHL logged the hit, not who hit whom; hits are credited to the hitter's team. Rink: 200 &times; 85 ft (61 &times; 25.9 m).</p>
+</div>
+</main>
+<footer>Data: NHL.com play-by-play feed, 2025-26 regular season (1,312 games). Not affiliated with or endorsed by the NHL. Map by <a href="https://ridgelinemaps.com"><b>Ridgeline Maps</b></a>, Edwards, Colorado. <a href="/">All hockey maps</a></footer>
+<script src="hits-data.js"></script>
+<script>
+(function(){
+var D=window.HITS,N=D.n;
+function dec(s){var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+var X8=dec(D.x),Y8=dec(D.y),M=dec(D.m),X=new Float32Array(N),Y=new Float32Array(N),JX=new Float32Array(N),JY=new Float32Array(N);
+var seed=12345;function rnd(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}
+var A=100,B=42.5,R=28,CX0=A-R,CY0=B-R,LA=Math.PI/2*R,LQ=CX0+LA+CY0;
+var DIST=new Float32Array(N),SB=new Int16Array(N),NB=Math.ceil(4*LQ/2);
+function nearest(ax,ay){var d,t;
+ if(ax>CX0&&ay>CY0){var dx=ax-CX0,dy=ay-CY0;d=R-Math.hypot(dx,dy);t=CX0+R*Math.atan2(dx,dy)}
+ else if(ay>CY0){d=B-ay;t=ax}
+ else if(ax>CX0){d=A-ax;t=CX0+LA+(CY0-ay)}
+ else{var dt=B-ay,de=A-ax;if(dt<=de){d=dt;t=ax}else{d=de;t=CX0+LA+(CY0-ay)}}
+ return [d,t]}
+for(var i=0;i<N;i++){var x=X8[i]>127?X8[i]-256:X8[i],y=Y8[i]>127?Y8[i]-256:Y8[i];X[i]=x;Y[i]=y;JX[i]=x+rnd()-.5;JY[i]=y+rnd()-.5;
+ var q=nearest(Math.abs(x),Math.abs(y)),t=q[1],s;
+ if(x>=0&&y>=0)s=t;else if(x>=0)s=2*LQ-t;else if(y<0)s=2*LQ+t;else s=4*LQ-t;
+ DIST[i]=q[0];SB[i]=Math.min(NB-1,Math.floor(s/2))}
+function wallPt(s){s=((s%(4*LQ))+4*LQ)%(4*LQ);var t,sx=1,sy=1;
+ if(s<=LQ)t=s;else if(s<=2*LQ){t=2*LQ-s;sy=-1}else if(s<=3*LQ){t=s-2*LQ;sx=-1;sy=-1}else{t=4*LQ-s;sx=-1}
+ var x,y,nx,ny;
+ if(t<CX0){x=t;y=B;nx=0;ny=1}else if(t<CX0+LA){var th=(t-CX0)/R;x=CX0+R*Math.sin(th);y=CY0+R*Math.cos(th);nx=Math.sin(th);ny=Math.cos(th)}else{x=A;y=CY0-(t-CX0-LA);nx=1;ny=0}
+ return [x*sx,y*sy,nx*sx,ny*sy]}
+function zoneOf(x){return x>25?0:(x<-25?2:1)}
+var ZC=['#e8734a','#e5c04a','#4aa8e8'],ZN=['Offensive zone','Neutral zone','Defensive zone'];
+// UI
+var teamSel=document.getElementById('fTeam');teamSel.innerHTML='<option value="-1">All 32 teams</option>'+D.teams.map(function(t,i){return '<option value="'+i+'">'+t[1]+'</option>'}).join('');
+var fT=-1,fP=-1,fH=-1,showP=true,showH=true,showR=true;
+var sel=new Uint32Array(N),nSel=0,grid=new Float32Array(200*85),cnt=new Int32Array(200*85),pref=null,heatCv=document.createElement('canvas'),ring=new Float32Array(NB),ringMax=1,nWall=0,zc=[0,0,0];
+heatCv.width=200;heatCv.height=85;
+function gi(x,y){var gx=Math.floor(x+100),gy=Math.floor(y+42.5);if(gx<0||gx>199||gy<0||gy>84)return -1;return gy*200+gx}
+function blur(src,w,h,sg){var r=Math.ceil(sg*3),k=[],sum=0,i,x,y,j;for(i=-r;i<=r;i++){var v=Math.exp(-i*i/(2*sg*sg));k.push(v);sum+=v}for(i=0;i<k.length;i++)k[i]/=sum;
+ var t=new Float32Array(w*h),o=new Float32Array(w*h);
+ for(y=0;y<h;y++)for(x=0;x<w;x++){var a=0;for(j=-r;j<=r;j++){var xx=x+j;if(xx>=0&&xx<w)a+=src[y*w+xx]*k[j+r]}t[y*w+x]=a}
+ for(y=0;y<h;y++)for(x=0;x<w;x++){var a2=0;for(j=-r;j<=r;j++){var yy=y+j;if(yy>=0&&yy<h)a2+=t[yy*w+x]*k[j+r]}o[y*w+x]=a2}
+ return o}
+function recompute(){
+ nSel=0;cnt.fill(0);ring.fill(0);nWall=0;zc[0]=zc[1]=zc[2]=0;
+ for(var i=0;i<N;i++){var m=M[i];
+  if(fT>=0&&(m>>3)!==fT)continue;if(fP>=0&&(m&3)!==fP)continue;if(fH>=0&&((m>>2)&1)!==fH)continue;
+  sel[nSel++]=i;var g=gi(X[i],Y[i]);if(g>=0)cnt[g]++;zc[zoneOf(X[i])]++;
+  if(DIST[i]<=6){nWall++;ring[SB[i]]++}}
+ ringMax=1;for(var b=0;b<NB;b++){ring[b]/=2;if(ring[b]>ringMax)ringMax=ring[b]}
+ // integral rows for hover
+ pref=new Int32Array(85*201);
+ for(var y=0;y<85;y++){var a=0;for(var x=0;x<200;x++){a+=cnt[y*200+x];pref[y*201+x+1]=a}}
+ var f=new Float32Array(200*85);for(var q=0;q<f.length;q++)f[q]=cnt[q];
+ grid=blur(f,200,85,2.4);var mx=0;for(var q2=0;q2<grid.length;q2++)if(grid[q2]>mx)mx=grid[q2];
+ var ctx=heatCv.getContext('2d'),im=ctx.createImageData(200,85);
+ for(var y2=0;y2<85;y2++)for(var x2=0;x2<200;x2++){var v=mx>0?Math.sqrt(grid[y2*200+x2]/mx):0,p=((84-y2)*200+x2)*4;
+  var zx=x2-100+.5,zi=zoneOf(zx),zc2=HC[zi],a=Math.pow(v,1.3);im.data[p]=zc2[0];im.data[p+1]=zc2[1];im.data[p+2]=zc2[2];im.data[p+3]=a*105}
+ ctx.putImageData(im,0,0);
+ stats();draw()}
+var HC=[[232,115,74],[229,192,74],[74,168,232]];
+function ramp(v){ // dark -> amber -> pale
+ var a=Math.pow(v,.9)*230;var r=60+195*Math.min(1,v*1.2),g=30+170*Math.pow(v,1.3),b=20+110*Math.pow(v,2.2);return [r,g,b,a]}
+function fmt(n){return n.toLocaleString('en-US')}
+function stats(){
+ var n=nSel||1;var el=document.getElementById('stats');
+ el.innerHTML=[[fmt(nSel),'hits in this selection'],[Math.round(100*nWall/n)+'%','within 6 ft (1.8 m) of the boards'],[Math.round(100*zc[0]/n)+'%','in the offensive zone'],[Math.round(100*zc[1]/n)+'%','in the neutral zone'],[Math.round(100*zc[2]/n)+'%','in the defensive zone'],[(Math.round(ringMax*10)/10)+'','peak hits per foot of wall']].map(function(s){return '<div class="stat"><div class="n">'+s[0]+'</div><div class="l">'+s[1]+'</div></div>'}).join('')}
+// canvas + view
+var cv=document.getElementById('cv'),wrap=document.getElementById('wrap'),ctx=cv.getContext('2d'),W=0,H=0,dpr=1,V={k:3,cx:0,cy:0,rot:0},K0=3;
+function resize(){var r=wrap.getBoundingClientRect();W=r.width;H=r.height;dpr=Math.min(window.devicePixelRatio||1,2.5);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);var rot=W<H*0.9?1:0;if(rot!==V.rot){V.rot=rot}fit();draw()}
+function fit(){var pad=30,lw=200+2*pad,lh=85+2*pad;K0=V.rot?Math.min(W/lh,H/lw):Math.min(W/lw,H/lh);V.k=K0;V.cx=0;V.cy=0;updScale()}
+function w2s(x,y){return V.rot?[W/2-V.k*(y-V.cy),H/2-V.k*(x-V.cx)]:[W/2+V.k*(x-V.cx),H/2-V.k*(y-V.cy)]}
+function s2w(sx,sy){return V.rot?[V.cx-(sy-H/2)/V.k,V.cy-(sx-W/2)/V.k]:[V.cx+(sx-W/2)/V.k,V.cy-(sy-H/2)/V.k]}
+function rrect(c,hw,hh,r){c.beginPath();c.moveTo(-hw+r,hh);c.lineTo(hw-r,hh);c.arcTo(hw,hh,hw,hh-r,r);c.lineTo(hw,-hh+r);c.arcTo(hw,-hh,hw-r,-hh,r);c.lineTo(-hw+r,-hh);c.arcTo(-hw,-hh,-hw,-hh+r,r);c.lineTo(-hw,hh-r);c.arcTo(-hw,hh,-hw+r,hh,r);c.closePath()}
+function draw(){
+ var k=V.k;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);ctx.fillStyle='#101a24';ctx.fillRect(0,0,W,H);
+ if(V.rot)ctx.setTransform(dpr*0,dpr*-k,dpr*-k,dpr*0,dpr*(W/2+k*V.cy),dpr*(H/2+k*V.cx));
+ else ctx.setTransform(dpr*k,0,0,-dpr*k,dpr*(W/2-k*V.cx),dpr*(H/2+k*V.cy));
+ var px=1/k;
+ // ice
+ rrect(ctx,A,B,R);ctx.fillStyle='#17263a';ctx.fill();
+ ctx.save();rrect(ctx,A,B,R);ctx.clip();
+ if(showH){ctx.imageSmoothingEnabled=true;ctx.globalCompositeOperation='lighter';ctx.save();ctx.scale(1,1);ctx.drawImage(heatCv,-100,-42.5,200,85);ctx.restore();ctx.globalCompositeOperation='source-over'}
+ // markings
+ ctx.lineWidth=Math.max(px*1.2,.5);ctx.strokeStyle='rgba(120,160,200,.5)';
+ ctx.beginPath();ctx.moveTo(25,-B);ctx.lineTo(25,B);ctx.moveTo(-25,-B);ctx.lineTo(-25,B);ctx.stroke();
+ ctx.strokeStyle='rgba(220,90,90,.55)';ctx.beginPath();ctx.moveTo(0,-B);ctx.lineTo(0,B);ctx.moveTo(89,-B);ctx.lineTo(89,B);ctx.moveTo(-89,-B);ctx.lineTo(-89,B);ctx.stroke();
+ ctx.beginPath();ctx.arc(0,0,15,0,7);ctx.stroke();
+ [[69,22],[69,-22],[-69,22],[-69,-22]].forEach(function(c){ctx.beginPath();ctx.arc(c[0],c[1],15,0,7);ctx.stroke()});
+ ctx.restore();
+ if(showP){var s=Math.max(.45,Math.min(1.6*px*2.2,1.4)),sz=Math.max(s,px*1.3);
+  for(var z=0;z<3;z++){ctx.fillStyle=ZC[z];ctx.globalAlpha=Math.min(.6,.07+Math.min(k,12)*.025);
+   for(var j=0;j<nSel;j++){var i=sel[j];if(zoneOf(X[i])!==z)continue;ctx.fillRect(JX[i]-sz/2,JY[i]-sz/2,sz,sz)}}
+  ctx.globalAlpha=1}
+ // outline
+ rrect(ctx,A,B,R);ctx.lineWidth=Math.max(px*2,.8);ctx.strokeStyle='#e9eef3';ctx.stroke();
+ // ring
+ if(showR){var sc=26/ringMax;for(var b=0;b<NB;b++){if(!ring[b])continue;var p=wallPt((b+.5)*2),L=ring[b]*sc,zi=zoneOf(p[0]);
+  ctx.strokeStyle=ZC[zi];ctx.lineWidth=1.7;ctx.globalAlpha=.92;ctx.lineCap='butt';ctx.beginPath();ctx.moveTo(p[0]+p[2]*1.2,p[1]+p[3]*1.2);ctx.lineTo(p[0]+p[2]*(1.2+L),p[1]+p[3]*(1.2+L));ctx.stroke()}ctx.globalAlpha=1}
+ // hover ring
+ if(hov){ctx.lineWidth=px*1.5;ctx.strokeStyle='#fff';ctx.setLineDash([px*5,px*4]);ctx.beginPath();ctx.arc(hov[0],hov[1],10,0,7);ctx.stroke();ctx.setLineDash([])}
+}
+// scale bars
+function nice(v,arr){var b=arr[0];for(var i=0;i<arr.length;i++)if(arr[i]<=v)b=arr[i];return b}
+function updScale(){var el=document.getElementById('scale'),ftpx=V.k,ft=nice(110/ftpx,[1,2,5,10,20,50,100,200]),m=nice(110/(ftpx*3.28084),[1,2,5,10,20,50,100]);
+ el.innerHTML='<div><i style="width:'+ft*ftpx+'px"></i>'+ft+' ft</div><div><i style="width:'+m*ftpx*3.28084+'px"></i>'+m+' m</div>'}
+var hov=null,tip=document.getElementById('tip');
+function showTip(sx,sy){var w=s2w(sx,sy),x=w[0],y=w[1],inR=Math.abs(x)<=A&&Math.abs(y)<=B,html='';hov=null;
+ if(inR&&(function(){var q=nearest(Math.abs(x),Math.abs(y));return q[0]>=0})()){
+  hov=[x,y];var c=0,gx0=Math.floor(x+100),gy0=Math.floor(y+42.5);
+  for(var dy=-10;dy<=10;dy++){var ry=gy0+dy;if(ry<0||ry>84)continue;var hw=Math.floor(Math.sqrt(100-dy*dy)),x0=Math.max(0,gx0-hw),x1=Math.min(199,gx0+hw);c+=pref[ry*201+x1+1]-pref[ry*201+x0]}
+  var avg=nSel*Math.PI*100/16850,ratio=avg>0?c/avg:0,zi=zoneOf(x);
+  html='<b>'+ZN[zi]+'</b><br>'+fmt(c)+' hits within 10 ft (3 m)<br>'+Math.round(c/3.14)+' per 100 sq ft; rink average '+Math.round(nSel/168.5)}
+ else{var q=nearest2(x,y);if(q&&showR){var v=ring[q.b];html='<b>Boards, '+ZN[zoneOf(q.x)]+'</b><br>'+(Math.round(v*10)/10)+' hits per foot of wall<br>'+(Math.round(v*10/0.3048)/100)+' per meter'}}
+ if(html){tip.innerHTML=html;tip.style.display='block';var tx=sx+14,ty=sy+14;if(tx+240>W)tx=sx-244;if(ty+80>H)ty=sy-84;tip.style.left=Math.max(4,tx)+'px';tip.style.top=Math.max(4,ty)+'px'}else tip.style.display='none';draw()}
+function nearest2(x,y){ // outside-rink point -> wall bin, only within bar reach
+ var ax=Math.abs(x),ay=Math.abs(y),d,t;
+ if(ax>CX0&&ay>CY0){var dx=ax-CX0,dy=ay-CY0;d=Math.hypot(dx,dy)-R;t=CX0+R*Math.atan2(dx,dy)}
+ else if(ay>CY0||(ay>=ax-CX0+CY0&&false)){d=ay-B;t=ax}
+ else if(ax>CX0){d=ax-A;t=CX0+LA+(CY0-ay)}
+ else{d=Math.max(ay-B,ax-A);t=ax}
+ if(d<0||d>28||ax>A+30)return null;
+ var s;if(x>=0&&y>=0)s=t;else if(x>=0)s=2*LQ-t;else if(y<0)s=2*LQ+t;else s=4*LQ-t;
+ var b=Math.min(NB-1,Math.floor(s/2));if(!ring[b]||d>1.2+ring[b]*26/ringMax+.8)return null;return {b:b,x:x}}
+// pointer handling
+var ptrs={},dragging=false,last=null,pinch=0,moved=0;
+function pos(e){var r=cv.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]}
+cv.addEventListener('pointerdown',function(e){cv.setPointerCapture(e.pointerId);ptrs[e.pointerId]=pos(e);last=pos(e);moved=0;var ks=Object.keys(ptrs);if(ks.length===2){var a=ptrs[ks[0]],b=ptrs[ks[1]];pinch=Math.hypot(a[0]-b[0],a[1]-b[1])}});
+cv.addEventListener('pointermove',function(e){var p=pos(e),ks=Object.keys(ptrs);
+ if(ks.length===2&&ptrs[e.pointerId]){ptrs[e.pointerId]=p;var a=ptrs[ks[0]],b=ptrs[ks[1]],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pinch>0)zoomAt((a[0]+b[0])/2,(a[1]+b[1])/2,d/pinch);pinch=d;return}
+ if(ks.length===1&&ptrs[e.pointerId]){var dx=p[0]-last[0],dy=p[1]-last[1];moved+=Math.abs(dx)+Math.abs(dy);if(moved>4){cv.classList.add('drag');tip.style.display='none';hov=null;
+   if(V.rot){V.cy-=dx/V.k;V.cx-=dy/V.k}else{V.cx-=dx/V.k;V.cy+=dy/V.k}last=p;ptrs[e.pointerId]=p;draw();updScale();return}}
+ if(!ks.length||e.pointerType==='mouse')showTip(p[0],p[1])});
+cv.addEventListener('pointerup',function(e){var wasTap=moved<=4&&Object.keys(ptrs).length===1;delete ptrs[e.pointerId];cv.classList.remove('drag');pinch=0;if(wasTap&&e.pointerType!=='mouse'){var p=pos(e);showTip(p[0],p[1])}});
+cv.addEventListener('pointercancel',function(e){delete ptrs[e.pointerId];cv.classList.remove('drag')});
+cv.addEventListener('pointerleave',function(e){if(e.pointerType==='mouse'){hov=null;tip.style.display='none';draw()}});
+function zoomAt(sx,sy,f){var w=s2w(sx,sy),nk=Math.max(K0*.8,Math.min(K0*14,V.k*f));f=nk/V.k;V.k=nk;
+ var w2=s2w(sx,sy);V.cx+=w[0]-w2[0];V.cy+=w[1]-w2[1];draw();updScale()}
+cv.addEventListener('wheel',function(e){e.preventDefault();var p=pos(e);zoomAt(p[0],p[1],Math.exp(-e.deltaY*.0016))},{passive:false});
+cv.addEventListener('dblclick',function(e){var p=pos(e);zoomAt(p[0],p[1],1.8)});
+document.getElementById('zi').onclick=function(){zoomAt(W/2,H/2,1.5)};
+document.getElementById('zo').onclick=function(){zoomAt(W/2,H/2,1/1.5)};
+document.getElementById('zr').onclick=function(){fit();draw()};
+function bind(id,fn){document.getElementById(id).addEventListener('change',fn)}
+bind('fTeam',function(e){fT=+e.target.value;recompute()});bind('fPer',function(e){fP=+e.target.value;recompute()});bind('fHome',function(e){fH=+e.target.value;recompute()});
+bind('lPts',function(e){showP=e.target.checked;draw()});bind('lHeat',function(e){showH=e.target.checked;draw()});bind('lRing',function(e){showR=e.target.checked;draw()});
+window.addEventListener('resize',resize);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){});
+resize();recompute();
+window.__hits={recompute:recompute,sel:function(){return nSel},wall:function(){return nWall}};
+})();
+</script>
+</body>
+</html>
